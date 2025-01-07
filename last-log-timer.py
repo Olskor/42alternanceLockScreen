@@ -97,6 +97,21 @@ def get_previous_login_time():
 def Lock(e = None):
     global locked
     locked = not locked
+	if locked:
+		lock_window = tk.Toplevel(root)
+		lock_window.attributes("-fullscreen", True)
+		lock_window.configure(bg="black")
+		if os.path.exists("background.png"):
+			bg_image = tk.PhotoImage(file="background.png")
+			bg_label = tk.Label(lock_window, image=bg_image)
+			bg_label.place(relwidth=1, relheight=1)
+			lock_window.bg_image = bg_image  # Keep a reference to avoid garbage collection
+		lock_frame = tk.Frame(lock_window, bg="black")
+		lock_frame.pack(anchor="center", expand="true")
+		lock_label = tk.Label(lock_frame, text=label.cget("text"), justify="center", font=("Helvetica", 50), bg="black", fg="white")
+		lock_label.pack(side="top", anchor="ne", padx=20, pady=20)
+		lock_window.bind('<Escape>', lambda e: ask_password())
+		lock_window.mainloop()
     return
 
 def ask_password():
@@ -172,9 +187,19 @@ def turn_off_screen():
 def turn_on_screen():
     os.system("xset dpms force on")
 
+def screen_off_locked():
+	global screen_off_timer, screen_off
+	if screen_off_timer <= 0:
+		screen_off = True
+		turn_off_screen()
+	else:
+		screen_off_timer -= 1
+		screen_off = False
+	root.after(1000, screen_off_locked)
+
 def CheckScreen():
-    global locked
-    if locked:
+    global screen_off, locked
+    if screen_off and locked:
         turn_off_screen()
         root.after(10000, UpdateLabelTime)
         return
@@ -221,8 +246,8 @@ get_previous_login_time()
 if last_login_time is None:
     exit()
 
-os.system("gsettings set org.gnome.mutter overlay-key ''")
-disable_shortcuts()
+#os.system("gsettings set org.gnome.mutter overlay-key ''")
+#disable_shortcuts()
 
 current_time = datetime.now()
 time_difference = current_time - last_login_time
@@ -239,11 +264,15 @@ label = tk.Label(frame, text=f"{time_difference}", justify="center", font=("Helv
 label.pack(expand="true")
 
 locked = False
+screen_off_timer = 10
+screen_off = False
 
 root.after(1, UpdateLabelTime)
 root.after(1000, PreventLock)
+root.after(1000, screen_off_locked)
 
-root.bind('<q>', Lock)
+root.bind('<l>', Lock)
+root.bind_all('<Key>', lambda e: setattr(globals(), 'screen_off_timer', 10))
 root.bind('<Escape>', lambda e: ask_password())
 
 root.mainloop()
