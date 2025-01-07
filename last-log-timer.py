@@ -133,7 +133,7 @@ def ask_password():
 	password_entry = tk.Entry(password_window, show="*", font=("Helvetica", 14))
 	password_entry.pack(pady=10)
 	password_entry.focus_set()
-	tk.Button(password_window, text="Submit", command=check_password, font=("Helvetica", 14)).pack(pady=10)
+	password_window.bind('<Return>', lambda event: check_password())
 
 def check_password():
 	entered_password = password_entry.get()
