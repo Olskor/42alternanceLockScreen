@@ -144,7 +144,7 @@ def check_password():
 		restore_shortcuts()
 		turn_on_screen()
 		locked = False
-        lock_window.destroy()
+		lock_window.destroy()
 	else:
 		tk.Label(password_window, text="Incorrect Password", font=("Helvetica", 12), bg="black", fg="red").pack(pady=5)
 
