@@ -236,7 +236,7 @@ def CheckScreen():
     global locked
     if locked:
         turn_off_screen()
-		root.after(10000, UpdateLabelTime)
+        root.after(10000, UpdateLabelTime)
 		return
     else:
         turn_on_screen()
