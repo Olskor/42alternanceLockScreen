@@ -294,7 +294,7 @@ def reset_screen_off_timer():
 	global screen_off_timer
 	screen_off_timer = 10
 
-root.bind('<l>', Lock)
+root.bind_all('<Super_L><l>', Lock)
 root.bind_all('<Key>', lambda e: reset_screen_off_timer())
 root.bind('<Escape>', lambda e: ask_password())
 
