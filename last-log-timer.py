@@ -282,7 +282,7 @@ if last_login_time is None:
     exit()
 
 os.system("gsettings set org.gnome.mutter overlay-key ''")
-#disable_shortcuts()
+disable_shortcuts()
 
 current_time = datetime.now()
 time_difference = current_time - last_login_time
