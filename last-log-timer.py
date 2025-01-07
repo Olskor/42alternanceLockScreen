@@ -187,7 +187,6 @@ def OnEscape():
     turn_on_screen()
 
 def PreventLock():
-    global locked
     pyautogui.moveRel(0, 1)
     pyautogui.moveRel(0, -1)
     root.after(1000 * 60 * 4, PreventLock)
@@ -199,10 +198,11 @@ def turn_on_screen():
     os.system("xset dpms force on")
 
 def screen_off_locked():
-	global screen_off_timer, screen_off
+	global screen_off_timer, screen_off, locked
+	if not locked:
+		screen_off = False
 	if screen_off_timer <= 0:
 		screen_off = True
-		turn_off_screen()
 	else:
 		screen_off_timer -= 1
 		screen_off = False
