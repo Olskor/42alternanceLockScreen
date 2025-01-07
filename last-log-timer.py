@@ -117,7 +117,10 @@ def Lock(e = None):
 	return
 
 def ask_password():
-	global password_window, password_entry
+	global password_window, password_entry, locked
+	if not locked:
+		OnEscape()
+		return
 	password_window = tk.Toplevel(root)
 	password_window.title("Enter Password")
 	password_window.geometry("300x150")
@@ -131,9 +134,6 @@ def ask_password():
 
 def check_password():
 	global lock_window, locked
-	if not locked:
-		OnEscape()
-		return
 	entered_password = password_entry.get()
 	user = os.getlogin()
 	auth = pam.pam()
