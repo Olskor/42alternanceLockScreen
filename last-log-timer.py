@@ -237,7 +237,7 @@ def CheckScreen():
     if locked:
         turn_off_screen()
         root.after(10000, UpdateLabelTime)
-		return
+        return
     else:
         turn_on_screen()
     root.after(20, UpdateLabelTime)
