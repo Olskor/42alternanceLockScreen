@@ -95,8 +95,8 @@ def get_previous_login_time():
         json.dump(existing_data, file, indent=4)
 
 def Lock(e = None):
-	global locked
-	locked = not locked
+	global locked, lock_window, lock_label
+	locked = True
 	if locked:
 		lock_window = tk.Toplevel(root)
 		lock_window.attributes("-fullscreen", True)
@@ -107,8 +107,8 @@ def Lock(e = None):
 			bg_label.place(relwidth=1, relheight=1)
 			lock_window.bg_image = bg_image  # Keep a reference to avoid garbage collection
 		lock_frame = tk.Frame(lock_window, bg="black")
-		lock_frame.pack(anchor="center", expand="true")
-		lock_label = tk.Label(lock_frame, text=label.cget("text"), justify="center", font=("Helvetica", 50), bg="black", fg="white")
+		lock_frame.pack(side="top", anchor="ne", padx=20, pady=20)
+		lock_label = tk.Label(lock_frame, text=label.cget("text"), justify="center", font=("Helvetica", 20), bg="black", fg="white")
 		lock_label.pack(side="top", anchor="ne", padx=20, pady=20)
 		lock_window.bind('<Escape>', lambda e: ask_password())
 		lock_window.mainloop()
@@ -140,7 +140,11 @@ def check_password():
 
 
 def OnEscape():
-    global last_login_time, logSaveFile
+    global last_login_time, logSaveFile, locked, lock_window
+	if locked:
+		locked = False
+		lock_window.destroy()
+
     root.destroy()
 
     current_time = datetime.now()
@@ -208,15 +212,21 @@ def CheckScreen():
     root.after(20, UpdateLabelTime)
 
 def UpdateLabelTime():
-    global label, last_login_time, offset, root
+    global label, last_login_time, offset, root, lock_label
     current_time = datetime.now()
     if current_time.hour > 20:
         label.configure(text=f"Time out it's 20h", fg = "white")
+		if lock_label:
+			lock_label.configure(text=f"Time out it's 20h")
     if current_time.hour < 8:
+		if lock_label:
+			lock_label.configure(text=f"It's to early !")
         label.configure(text=f"It's to early !", fg = "white")
     time_difference = current_time - last_login_time
     if time_difference.total_seconds() >= 5.75 * 3600:
         label.configure(text=f"Take a break!", fg = "white")
+		if lock_label:
+			lock_label.configure(text=f"Take a break!")
         CheckScreen()
         return
     diff = 7 * 3600
@@ -229,12 +239,18 @@ def UpdateLabelTime():
             label.configure(text=f"{remaining_time_str}", fg = "red")
         if remaining_time <= 0:
             label.configure(text=f"YOU ARE FREE !!!", fg = "white")
+			if lock_label:
+				lock_label.configure(text=f"YOU ARE FREE !!!")
             CheckScreen()
             return
         CheckScreen()
+		if lock_label:
+			lock_label.configure(text=f"{remaining_time_str}")
         return
     remaining_time_str = str(datetime.utcfromtimestamp(remaining_time).strftime("%H:%M:%S"))
     label.configure(text=f"{remaining_time_str}", fg = "white")
+	if lock_label:
+		lock_label.configure(text=f"{remaining_time_str}")
     CheckScreen()      
 
 logSaveFile = "saveLog.json"
