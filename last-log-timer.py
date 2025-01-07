@@ -95,8 +95,8 @@ def get_previous_login_time():
         json.dump(existing_data, file, indent=4)
 
 def Lock(e = None):
-    global locked
-    locked = not locked
+	global locked
+	locked = not locked
 	if locked:
 		lock_window = tk.Toplevel(root)
 		lock_window.attributes("-fullscreen", True)
