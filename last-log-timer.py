@@ -141,9 +141,9 @@ def check_password():
 
 def OnEscape():
     global last_login_time, logSaveFile, locked, lock_window
-	if locked:
-		locked = False
-		lock_window.destroy()
+    if locked:
+        locked = False
+        lock_window.destroy()
 
     root.destroy()
 
