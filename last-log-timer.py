@@ -121,10 +121,32 @@ def Lock(e = None):
     locked = not locked
     return
 
-def OnEscape(e):
+def ask_password():
+	password_window = tk.Toplevel(root)
+	password_window.title("Enter Password")
+	password_window.geometry("300x150")
+	password_window.configure(bg="black")
+
+	tk.Label(password_window, text="Password:", font=("Helvetica", 14), bg="black", fg="white").pack(pady=10)
+	password_entry = tk.Entry(password_window, show="*", font=("Helvetica", 14))
+	password_entry.pack(pady=10)
+	password_entry.focus_set()
+	tk.Button(password_window, text="Submit", command=check_password, font=("Helvetica", 14)).pack(pady=10)
+
+def check_password():
+	entered_password = password_entry.get()
+	user = os.getlogin()
+	result = subprocess.run(['sudo', '-S', 'true'], input=entered_password, text=True, capture_output=True)
+	if result.returncode == 0:
+		password_window.destroy()
+		OnEscape(None)
+	else:
+		tk.Label(password_window, text="Incorrect Password", font=("Helvetica", 12), bg="black", fg="red").pack(pady=5)
+
+
+def OnEscape():
     global last_login_time, logSaveFile
     root.destroy()
-
 
     current_time = datetime.now()
     time_difference = current_time - last_login_time
@@ -135,8 +157,6 @@ def OnEscape(e):
         "poste": socket.gethostname()
     }
     try:
-
-
         with open(logSaveFile, "r") as file:
             existing_data = json.load(file)
     except:
@@ -244,6 +264,6 @@ root.after(1, UpdateLabelTime)
 root.after(1000, PreventLock)
 
 root.bind('<q>', Lock)
-root.bind('<Escape>', OnEscape)
+root.bind('<Escape>', lambda e: ask_password())
 
 root.mainloop()
