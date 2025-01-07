@@ -144,6 +144,7 @@ def OnEscape():
     if locked:
         locked = False
         lock_window.destroy()
+        return
 
     root.destroy()
 
