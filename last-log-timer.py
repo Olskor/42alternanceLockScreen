@@ -98,6 +98,8 @@ def Lock(e = None):
 	global locked, lock_window, lock_label
 	locked = True
 	if locked:
+		os.system("gsettings set org.gnome.mutter overlay-key ''")
+		disable_shortcuts()
 		lock_window = tk.Toplevel(root)
 		lock_window.attributes("-fullscreen", True)
 		lock_window.configure(bg="black")
@@ -128,23 +130,27 @@ def ask_password():
 	password_window.bind('<Return>', lambda event: check_password())
 
 def check_password():
+	global lock_window, locked
+	if not locked:
+		OnEscape()
+		return
 	entered_password = password_entry.get()
 	user = os.getlogin()
 	auth = pam.pam()
 	user = os.getlogin()
 	if auth.authenticate(user, entered_password):
 		password_window.destroy()
-		OnEscape()
+		os.system("gsettings set org.gnome.mutter overlay-key 'Super_L'")
+		restore_shortcuts()
+		turn_on_screen()
+		locked = False
+        lock_window.destroy()
 	else:
 		tk.Label(password_window, text="Incorrect Password", font=("Helvetica", 12), bg="black", fg="red").pack(pady=5)
 
 
 def OnEscape():
-    global last_login_time, logSaveFile, locked, lock_window
-    if locked:
-        locked = False
-        lock_window.destroy()
-        return
+    global last_login_time, logSaveFile
 
     root.destroy()
 
@@ -262,9 +268,6 @@ if last_login_time.hour < 8:
 get_previous_login_time()
 if last_login_time is None:
     exit()
-
-#os.system("gsettings set org.gnome.mutter overlay-key ''")
-#disable_shortcuts()
 
 current_time = datetime.now()
 time_difference = current_time - last_login_time
