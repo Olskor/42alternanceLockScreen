@@ -224,8 +224,6 @@ def PreventLock():
     global locked
     pyautogui.moveRel(0, 1)
     pyautogui.moveRel(0, -1)
-    if locked:
-        turn_off_screen()
     root.after(1000 * 60 * 4, PreventLock)
 
 def turn_off_screen():
@@ -238,6 +236,8 @@ def CheckScreen():
     global locked
     if locked:
         turn_off_screen()
+		root.after(10000, UpdateLabelTime)
+		return
     else:
         turn_on_screen()
     root.after(20, UpdateLabelTime)
