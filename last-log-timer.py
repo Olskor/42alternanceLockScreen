@@ -9,77 +9,17 @@ import socket
 import os
 import pam
 
-shortcuts_to_disable = [
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-left",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-right",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-up",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-down",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-1",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-2",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-3",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-4",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-5",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-6",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-7",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-8",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-9",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-10",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-11",
-	"org.gnome.desktop.wm.keybindings switch-to-workspace-12",
-	"org.gnome.desktop.wm.keybindings switch-applications",
-	"org.gnome.desktop.wm.keybindings switch-windows",
-	"org.gnome.desktop.wm.keybindings switch-input-source",
-	"org.gnome.desktop.wm.keybindings switch-input-source-backward",
-	"org.gnome.settings-daemon.plugins.media-keys terminal",
-	"org.gnome.settings-daemon.plugins.media-keys www",
-	"org.gnome.settings-daemon.plugins.media-keys email",
-	"org.gnome.settings-daemon.plugins.media-keys calculator",
-	"org.gnome.settings-daemon.plugins.media-keys home",
-	"org.gnome.settings-daemon.plugins.media-keys help",
-	"org.gnome.settings-daemon.plugins.media-keys search",
-	"org.gnome.settings-daemon.plugins.media-keys magnifier",
-	"org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-in",
-	"org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-out",
-	"org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-in",
-	"org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-out",
-	"org.gnome.settings-daemon.plugins.media-keys screensaver",
-	"org.gnome.settings-daemon.plugins.media-keys logout",
-	"org.gnome.settings-daemon.plugins.media-keys suspend",
-	"org.gnome.settings-daemon.plugins.media-keys hibernate",
-	"org.gnome.settings-daemon.plugins.media-keys shutdown",
-	"org.gnome.settings-daemon.plugins.media-keys volume-mute",
-	"org.gnome.settings-daemon.plugins.media-keys volume-down",
-	"org.gnome.settings-daemon.plugins.media-keys volume-up",
-	"org.gnome.settings-daemon.plugins.media-keys play",
-	"org.gnome.settings-daemon.plugins.media-keys pause",
-	"org.gnome.settings-daemon.plugins.media-keys stop",
-	"org.gnome.settings-daemon.plugins.media-keys previous",
-	"org.gnome.settings-daemon.plugins.media-keys next",
-	"org.gnome.settings-daemon.plugins.media-keys eject",
-	"org.gnome.settings-daemon.plugins.media-keys mic-mute",
-	"org.gnome.settings-daemon.plugins.media-keys video-out",
-	"org.gnome.settings-daemon.plugins.media-keys screenshot",
-	"org.gnome.settings-daemon.plugins.media-keys area-screenshot",
-	"org.gnome.settings-daemon.plugins.media-keys window-screenshot",
-	"org.gnome.settings-daemon.plugins.media-keys magnifier-toggle",
-	"org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-in",
-	"org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-out",
-	"org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-in",
-	"org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-out",
-	"org.gnome.shell.keybindings show-all-applications",
-	"org.gnome.shell.keybindings show-notification-list",
-	"org.gnome.shell.keybindings toggle-overview",
-	"org.gnome.desktop.wm.keybindings hide-window",
-	"org.gnome.desktop.wm.keybindings switch-group",
-	"org.gnome.desktop.wm.keybindings switch-to-last-workspace",
-	"org.gnome.desktop.wm.keybindings switch-to-first-workspace",
-	"org.gnome.settings-daemon.plugins.media-keys help"
-	"org.gnome.settings-daemon.plugins.media-keys custom-keybindings",
-	"org.gnome.settings-daemon.plugins.media-keys custom-keybindings/custom0",
-	"org.gnome.settings-daemon.plugins.media-keys custom-keybindings/custom0/name",
-	"org.gnome.settings-daemon.plugins.media-keys custom-keybindings/custom0/command",
-	"org.gnome.settings-daemon.plugins.media-keys custom-keybindings/custom0/binding"
-]
+def get_all_shortcuts():
+	result = subprocess.run(["gsettings", "list-recursively"], stdout=subprocess.PIPE, text=True)
+	lines = result.stdout.splitlines()
+	shortcuts = []
+	for line in lines:
+		if "keybindings" in line or "media-keys" in line:
+			key = line.split()[0] + " " + line.split()[1]
+			shortcuts.append(key)
+	return shortcuts
+
+shortcuts_to_disable = get_all_shortcuts()
 
 
 def disable_shortcuts():
