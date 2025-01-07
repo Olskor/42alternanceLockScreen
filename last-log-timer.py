@@ -7,6 +7,7 @@ import threading
 import json
 import socket
 import os
+import pam
 
 shortcuts_to_disable = [
 	"org.gnome.desktop.wm.keybindings switch-to-workspace-left",
@@ -122,6 +123,7 @@ def Lock(e = None):
     return
 
 def ask_password():
+	global password_window, password_entry
 	password_window = tk.Toplevel(root)
 	password_window.title("Enter Password")
 	password_window.geometry("300x150")
@@ -136,8 +138,9 @@ def ask_password():
 def check_password():
 	entered_password = password_entry.get()
 	user = os.getlogin()
-	result = subprocess.run(['sudo', '-S', 'true'], input=entered_password, text=True, capture_output=True)
-	if result.returncode == 0:
+    auth = pam.pam()
+    user = os.getlogin()
+    if auth.authenticate(user, entered_password):
 		password_window.destroy()
 		OnEscape(None)
 	else:
@@ -242,7 +245,7 @@ if last_login_time is None:
     exit()
 
 os.system("gsettings set org.gnome.mutter overlay-key ''")
-disable_shortcuts()
+#disable_shortcuts()
 
 current_time = datetime.now()
 time_difference = current_time - last_login_time
