@@ -212,20 +212,20 @@ def CheckScreen():
     root.after(20, UpdateLabelTime)
 
 def UpdateLabelTime():
-	global label, last_login_time, offset, root, lock_label
+	global label, last_login_time, offset, root, lock_label, locked
 	current_time = datetime.now()
 	if current_time.hour > 20:
 		label.configure(text=f"Time out it's 20h", fg = "white")
-		if lock_label:
+		if locked:
 			lock_label.configure(text=f"Time out it's 20h")
 	if current_time.hour < 8:
-		if lock_label:
+		if locked:
 			lock_label.configure(text=f"It's to early !")
 		label.configure(text=f"It's to early !", fg = "white")
 	time_difference = current_time - last_login_time
 	if time_difference.total_seconds() >= 5.75 * 3600:
 		label.configure(text=f"Take a break!", fg = "white")
-		if lock_label:
+		if locked:
 			lock_label.configure(text=f"Take a break!")
 		CheckScreen()
 		return
@@ -239,17 +239,17 @@ def UpdateLabelTime():
 			label.configure(text=f"{remaining_time_str}", fg = "red")
 		if remaining_time <= 0:
 			label.configure(text=f"YOU ARE FREE !!!", fg = "white")
-			if lock_label:
+			if locked:
 				lock_label.configure(text=f"YOU ARE FREE !!!")
 			CheckScreen()
 			return
 		CheckScreen()
-		if lock_label:
+		if locked:
 			lock_label.configure(text=f"{remaining_time_str}")
 		return
 	remaining_time_str = str(datetime.utcfromtimestamp(remaining_time).strftime("%H:%M:%S"))
 	label.configure(text=f"{remaining_time_str}", fg = "white")
-	if lock_label:
+	if locked:
 		lock_label.configure(text=f"{remaining_time_str}")
 	CheckScreen()
 
