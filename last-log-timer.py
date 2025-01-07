@@ -138,9 +138,9 @@ def ask_password():
 def check_password():
 	entered_password = password_entry.get()
 	user = os.getlogin()
-    auth = pam.pam()
-    user = os.getlogin()
-    if auth.authenticate(user, entered_password):
+	auth = pam.pam()
+	user = os.getlogin()
+	if auth.authenticate(user, entered_password):
 		password_window.destroy()
 		OnEscape(None)
 	else:
