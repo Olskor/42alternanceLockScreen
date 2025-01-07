@@ -112,7 +112,7 @@ def Lock(e = None):
 		lock_label.pack(side="top", anchor="ne", padx=20, pady=20)
 		lock_window.bind('<Escape>', lambda e: ask_password())
 		lock_window.mainloop()
-    return
+	return
 
 def ask_password():
 	global password_window, password_entry
