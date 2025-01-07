@@ -274,7 +274,6 @@ time_difference = current_time - last_login_time
 
 root = tk.Tk()
 root.title("Time remaning...")
-root.attributes("-fullscreen", True)
 root.configure(bg="black")
 
 frame = tk.Frame(root, bg = "black")
