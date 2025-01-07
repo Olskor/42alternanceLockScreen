@@ -142,7 +142,7 @@ def check_password():
 	user = os.getlogin()
 	if auth.authenticate(user, entered_password):
 		password_window.destroy()
-		OnEscape(None)
+		OnEscape()
 	else:
 		tk.Label(password_window, text="Incorrect Password", font=("Helvetica", 12), bg="black", fg="red").pack(pady=5)
 
