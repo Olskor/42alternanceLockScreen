@@ -220,8 +220,8 @@ def CheckScreen():
 def UpdateLabelTime():
 	global label, last_login_time, offset, root, lock_label, lock_window, locked, locked_time
 	current_time = datetime.now()
-	time_since_locked = current_time - locked_time
 	if locked:
+		time_since_locked = current_time - locked_time
 		if time_since_locked.total_seconds() >= 60:
 			lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : {time_since_locked.seconds // 60} minutes ago...\n Back sOOn..")
 			if time_since_locked.total_seconds() > 60 * 45:
