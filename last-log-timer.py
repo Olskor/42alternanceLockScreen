@@ -115,6 +115,7 @@ def Lock(e = None):
 			bg_image = bg_image.subsample(bg_image.width() // screen_width, bg_image.height() // screen_height)
 			lock_window.bg_image = bg_image
 		except:
+			bg_image = None
 			print("Error loading background image")
 	canvas.create_image(0, 0, anchor="nw", image=bg_image)
 	canvas.pack(fill="both", expand=True)
