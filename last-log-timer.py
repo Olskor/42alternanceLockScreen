@@ -98,8 +98,8 @@ def Lock(e = None):
 	global locked, lock_window, lock_label
 	locked = True
 	if locked:
-		os.system("gsettings set org.gnome.mutter overlay-key ''")
-		disable_shortcuts()
+		#os.system("gsettings set org.gnome.mutter overlay-key ''")
+		#disable_shortcuts()
 		lock_window = tk.Toplevel(root)
 		lock_window.attributes("-fullscreen", True)
 		lock_window.configure(bg="black")
@@ -107,7 +107,7 @@ def Lock(e = None):
 			bg_image = tk.PhotoImage(file="ft_lock_bkg.jpg")
 			bg_label = tk.Label(lock_window, image=bg_image)
 			bg_label.place(relwidth=1, relheight=1)
-			lock_window.bg_image = bg_image  # Keep a reference to avoid garbage collection
+			lock_window.bg_image = bg_image
 		lock_frame = tk.Frame(lock_window, bg="black")
 		lock_frame.pack(side="top", anchor="ne", padx=20, pady=20)
 		lock_label = tk.Label(lock_frame, text=label.cget("text"), justify="center", font=("Helvetica", 20), bg="black", fg="white")
