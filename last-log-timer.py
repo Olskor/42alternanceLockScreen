@@ -96,36 +96,40 @@ def get_previous_login_time():
 
 def Lock(e = None):
 	global locked, lock_window, lock_label, password_entry
-	locked = True
 	if locked:
-		#os.system("gsettings set org.gnome.mutter overlay-key ''")
-		#disable_shortcuts()
-		lock_window = tk.Toplevel(root)
-		lock_window.attributes("-fullscreen", True)
-		lock_window.configure(bg="black")
-		if os.path.exists("ft_lock_bkg.jpg"):
-			bg_image = tk.PhotoImage(file="ft_lock_bkg.jpg")
-			bg_label = tk.Label(lock_window, image=bg_image)
-			bg_label.place(relwidth=1, relheight=1)
-			lock_window.bg_image = bg_image
-		lock_frame = tk.Frame(lock_window, bg="black")
-		lock_frame.pack(side="top", anchor="ne", padx=20, pady=20)
-		lock_label = tk.Label(lock_frame, text=label.cget("text"), justify="center", font=("Helvetica", 20), bg="black", fg="white")
-		lock_label.pack(side="top", anchor="ne", padx=20, pady=20)
+		return
+	locked = True
+	#os.system("gsettings set org.gnome.mutter overlay-key ''")
+	#disable_shortcuts()
+	lock_window = tk.Toplevel(root)
+	lock_window.attributes("-fullscreen", True)
+	lock_window.configure(bg="black")
+	if os.path.exists("ft_lock_bkg.jpg"):
+		bg_image = tk.PhotoImage(file="ft_lock_bkg.jpg")
+		bg_label = tk.Label(lock_window, image=bg_image)
+		bg_label.place(relwidth=1, relheight=1)
+		lock_window.bg_image = bg_image
+	lock_frame = tk.Frame(lock_window, bg="black")
+	lock_frame.pack(side="top", anchor="ne", padx=20, pady=20)
+	lock_label = tk.Label(lock_frame, text=label.cget("text"), justify="center", font=("Helvetica", 20), bg="black", fg="white")
+	lock_label.pack(side="top", anchor="ne", padx=20, pady=20)
 		
-		lock_message = tk.Label(lock_window, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), bg="black", fg="white")
-		lock_message.pack(side="top", anchor="nw", padx=100, pady=20)
-		password_entry = tk.Entry(lock_window, show="o", font=("Helvetica", 14))
-		password_entry.pack(side="top", anchor="nw", padx=100, pady=20)
-		password_entry.focus_set()
-		lock_window.password_entry = password_entry
-		lock_window.bind('<Return>', lambda event: check_password())
-		lock_window.mainloop()
+	lock_message = tk.Label(lock_window, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), bg="black", fg="white")
+	lock_message.pack(side="top", anchor="nw", padx=200, pady=0)
+	password_entry = tk.Entry(lock_window, show="o", font=("Helvetica", 14))
+	password_entry.pack(side="top", anchor="nw", padx=200, pady=0)
+	password_entry.focus_set()
+	lock_window.password_entry = password_entry
+	lock_window.bind('<Return>', lambda event: check_password())
+	lock_window.mainloop()
 	return
 
 def check_password():
 	global lock_window, locked
 	entered_password = lock_window.password_entry.get()
+	password_entry.delete(0, "end")
+	password_entry.insert(0, "validating...")
+	password_entry.update()
 	user = os.getlogin()
 	auth = pam.pam()
 	user = os.getlogin()
