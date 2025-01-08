@@ -14,6 +14,8 @@ def get_all_shortcuts():
 	lines = result.stdout.splitlines()
 	shortcuts = []
 	for line in lines:
+		if "start_timer" in line:
+			continue
 		if "keybindings" in line or "media-keys" in line:
 			key = line.split()[0] + " " + line.split()[1]
 			shortcuts.append(key)
@@ -109,19 +111,20 @@ def Lock(e = None):
 	screen_width = lock_window.winfo_screenwidth()
 	screen_height = lock_window.winfo_screenheight()
 	canvas = tk.Canvas(lock_window, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
-	if os.path.exists("ft_lock_bkg.png"):
+	if os.path.exists("/home/jauffret/Documents/42alternanceLockScreen/ft_lock_bkg.png"):
 		try:
-			bg_image = tk.PhotoImage(file="ft_lock_bkg.png")
+			bg_image = tk.PhotoImage(file="/home/jauffret/Documents/42alternanceLockScreen/ft_lock_bkg.png")
 			bg_image = bg_image.subsample(bg_image.width() // screen_width, bg_image.height() // screen_height)
 			lock_window.bg_image = bg_image
+			canvas.create_image(0, 0, anchor="nw", image=bg_image)
 		except:
+			canvas.create_image(0, 0, anchor="nw")
 			print("Error loading background image")
-	canvas.create_image(0, 0, anchor="nw", image=bg_image)
 	canvas.pack(fill="both", expand=True)
 	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
 	locked_by = canvas.create_text(540, 100, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
 	password_entry = tk.Entry(canvas, show="o", font=("Helvetica", 14), insertbackground="white")
-	password_entry.configure(bg="#9194B6", fg="#FFFFFF", width=30, bd=8, relief="flat", highlightthickness=0)
+	password_entry.configure(bg="#8FABFF", fg="#FFFFFF", width=30, bd=8, relief="flat", highlightthickness=0)
 	password_entry.pack(side="top", anchor="nw", padx=280, pady=150)
 	password_entry.focus_set()
 	lock_window.password_entry = password_entry
@@ -134,9 +137,6 @@ def Lock(e = None):
 def check_password():
 	global lock_window, locked
 	entered_password = lock_window.password_entry.get()
-	password_entry.delete(0, "end")
-	password_entry.update()
-	user = os.getlogin()
 	auth = pam.pam()
 	user = os.getlogin()
 	if auth.authenticate(user, entered_password):
@@ -269,7 +269,7 @@ def UpdateLabelTime():
 		lock_window.canvas.itemconfigure(lock_label, text=f"{remaining_time_str}")
 	CheckScreen()
 
-logSaveFile = "saveLog.json"
+logSaveFile = "/home/jauffret/Documents/42alternanceLockScreen/saveLog.json"
 offset = 0
 last_login_time = get_last_login_time()
 if last_login_time.hour < 8:
