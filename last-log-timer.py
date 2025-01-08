@@ -137,7 +137,7 @@ def check_password():
 	user = os.getlogin()
 	if auth.authenticate(user, entered_password):
 		os.system("gsettings set org.gnome.mutter overlay-key 'Super_L'")
-		threading.thread(target=restore_shortcuts).start()
+		threading.Thread(target=restore_shortcuts).start()
 		turn_on_screen()
 		locked = False
 		lock_window.destroy()
