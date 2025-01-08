@@ -231,16 +231,16 @@ def UpdateLabelTime():
 			if time_since_locked.total_seconds() > 60 * 45:
 				lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : a long time ago...\n Back sOOn..")
 	if current_time.hour > 20:
-		root.canvas.itemconfigure(root.label, text=f"Time out it's 20h", fg = "white")
+		root.canvas.itemconfigure(root.label, text=f"Time out it's 20h")
 		if locked:
 			lock_window.canvas.itemconfigure(lock_label, text=f"Time out it's 20h")
 	if current_time.hour < 8:
 		if locked:
 			lock_window.canvas.itemconfigure(lock_label, text=f"It's to early !")
-		root.canvas.itemconfigure(root.label, text=f"It's to early !", fg = "white")
+		root.canvas.itemconfigure(root.label, text=f"It's to early !")
 	time_difference = current_time - last_login_time
 	if time_difference.total_seconds() >= 5.75 * 3600:
-		root.canvas.itemconfigure(root.label, text=f"Take a break!", fg = "white")
+		root.canvas.itemconfigure(root.label, text=f"Take a break!")
 		if locked:
 			lock_window.canvas.itemconfigure(lock_label, text=f"Take a break!")
 		CheckScreen()
@@ -250,11 +250,11 @@ def UpdateLabelTime():
 	if remaining_time < 600:
 		remaining_time_str = str(datetime.utcfromtimestamp(remaining_time).strftime("%M:%S.%f")[:-3])
 		if int(remaining_time % 2) == 0:
-			root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}", fg = "white")
+			root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}")
 		if int(remaining_time % 2) == 1:
-			root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}", fg = "red")
+			root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}")
 		if remaining_time <= 0:
-			root.canvas.itemconfigure(root.label, text=f"YOU ARE FREE !!!", fg = "white")
+			root.canvas.itemconfigure(root.label, text=f"YOU ARE FREE !!!")
 			if locked:
 				lock_window.canvas.itemconfigure(lock_label, text=f"YOU ARE FREE !!!")
 			CheckScreen()
@@ -264,7 +264,7 @@ def UpdateLabelTime():
 			lock_window.canvas.itemconfigure(lock_label, text=f"{remaining_time_str}")
 		return
 	remaining_time_str = str(datetime.utcfromtimestamp(remaining_time).strftime("%H:%M:%S"))
-	root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}", fg = "white")
+	root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}")
 	if locked:
 		lock_window.canvas.itemconfigure(lock_label, text=f"{remaining_time_str}")
 	CheckScreen()
