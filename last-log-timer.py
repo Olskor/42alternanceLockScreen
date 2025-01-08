@@ -104,13 +104,15 @@ def Lock(e = None):
 	lock_window = tk.Toplevel(root)
 	lock_window.attributes("-fullscreen", True)
 	lock_window.configure(bg="black")
+	canvas = tk.Canvas(lock_window, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
 	if os.path.exists("ft_lock_bkg.png"):
-		bg_image = tk.PhotoImage(file="ft_lock_bkg.png")
-		bg_label = tk.Label(lock_window, image=bg_image)
-		bg_label.place(relwidth=1, relheight=1)
+		bg_image = tk.PhotoImage(file="ft_lock_bkg.png"))
 		lock_window.bg_image = bg_image
-	lock_label = tk.Label(lock_window, text=label.cget("text"), justify="center", font=("Helvetica", 20), bg="black", fg="white")
-	lock_label.pack(side="top", anchor="se", padx=20, pady=20)
+		screen_width = lock_window.winfo_screenwidth()
+		screen_height = lock_window.winfo_screenheight()
+	canvas.create_image(0, 0, anchor="nw", image=bg_image)
+	canvas.pack(fill="both", expand=True)
+	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
 		
 	lock_message = tk.Label(lock_window, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), bg="black", fg="white")
 	lock_message.pack(side="top", anchor="nw", padx=270, pady=0)
