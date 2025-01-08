@@ -250,11 +250,11 @@ def UpdateLabelTime():
 	if remaining_time < 600:
 		remaining_time_str = str(datetime.utcfromtimestamp(remaining_time).strftime("%M:%S.%f")[:-3])
 		if int(remaining_time % 2) == 0:
-			root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}")
+			root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}", fill="red")
 		if int(remaining_time % 2) == 1:
-			root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}")
+			root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}", fill="white")
 		if remaining_time <= 0:
-			root.canvas.itemconfigure(root.label, text=f"YOU ARE FREE !!!")
+			root.canvas.itemconfigure(root.label, text=f"YOU ARE FREE !!!", fill="green")
 			if locked:
 				lock_window.canvas.itemconfigure(lock_label, text=f"YOU ARE FREE !!!")
 			CheckScreen()
