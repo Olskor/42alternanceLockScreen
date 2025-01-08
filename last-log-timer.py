@@ -113,11 +113,11 @@ def Lock(e = None):
 		lock_label = tk.Label(lock_frame, text=label.cget("text"), justify="center", font=("Helvetica", 20), bg="black", fg="white")
 		lock_label.pack(side="top", anchor="ne", padx=20, pady=20)
 		
-		password_entry = tk.Entry(lock_window, show="o", font=("Helvetica", 14))
-		password_entry.place(x=10, y=10)
-		password_entry.focus_set()
 		lock_message = tk.Label(lock_window, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), bg="black", fg="white")
-		lock_message.pack(side="top", anchor="ne", padx=20, pady=20)
+		lock_message.pack(side="top", anchor="no", padx=100, pady=20)
+		password_entry = tk.Entry(lock_window, show="o", font=("Helvetica", 14))
+		password_entry.pack(side="top", anchor="n0", padx=100, pady=20)
+		password_entry.focus_set()
 		lock_window.password_entry = password_entry
 		lock_window.bind('<Return>', lambda event: check_password())
 		lock_window.mainloop()
@@ -140,7 +140,10 @@ def check_password():
 
 
 def OnEscape():
-    global last_login_time, logSaveFile
+    global last_login_time, logSaveFile, locked
+
+	if locked:
+		return
 
     root.destroy()
 
@@ -286,7 +289,7 @@ def reset_screen_off_timer():
 
 root.bind_all('<Control_L><l>', Lock)
 root.bind_all('<Key>', lambda e: reset_screen_off_timer())
-root.bind('<Escape>', lambda e: ask_password())
+root.bind('<Escape>', lambda e: OnEscape())
 root.bind_all('<Motion>', lambda e: reset_screen_off_timer())
 
 root.mainloop()
