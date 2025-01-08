@@ -113,15 +113,14 @@ def Lock(e = None):
 	canvas.create_image(0, 0, anchor="nw", image=bg_image)
 	canvas.pack(fill="both", expand=True)
 	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
-		
-	lock_message = tk.Label(lock_window, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), bg="black", fg="white")
-	lock_message.pack(side="top", anchor="nw", padx=270, pady=0)
-	password_entry = tk.Entry(lock_window, show="o", font=("Helvetica", 14))
+	locked_by = canvas.create_text(screen_width // 2, screen_height // 2, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center")
+	password_entry = tk.Entry(canvas, show="o", font=("Helvetica", 14))
 	password_entry.configure(bg="black", fg="white", width=50, relief="flat", highlightthickness=0, bd=0)
 	password_entry.pack(side="top", anchor="nw", padx=280, pady=10)
 	password_entry.focus_set()
 	lock_window.password_entry = password_entry
 	lock_window.bind('<Return>', lambda event: check_password())
+	lock_window.canvas = canvas
 	lock_window.mainloop()
 	return
 
@@ -216,21 +215,21 @@ def CheckScreen():
     root.after(20, UpdateLabelTime)
 
 def UpdateLabelTime():
-	global label, last_login_time, offset, root, lock_label, locked
+	global label, last_login_time, offset, root, lock_label, lock_window, locked
 	current_time = datetime.now()
 	if current_time.hour > 20:
 		label.configure(text=f"Time out it's 20h", fg = "white")
 		if locked:
-			lock_label.configure(text=f"Time out it's 20h")
+			lock_window.canvas.itemconfigure(lock_label, text=f"Time out it's 20h")
 	if current_time.hour < 8:
 		if locked:
-			lock_label.configure(text=f"It's to early !")
+			lock_window.canvas.itemconfigure(lock_label, text=f"It's to early !")
 		label.configure(text=f"It's to early !", fg = "white")
 	time_difference = current_time - last_login_time
 	if time_difference.total_seconds() >= 5.75 * 3600:
 		label.configure(text=f"Take a break!", fg = "white")
 		if locked:
-			lock_label.configure(text=f"Take a break!")
+			lock_window.canvas.itemconfigure(lock_label, text=f"Take a break!")
 		CheckScreen()
 		return
 	diff = 7 * 3600
@@ -244,17 +243,17 @@ def UpdateLabelTime():
 		if remaining_time <= 0:
 			label.configure(text=f"YOU ARE FREE !!!", fg = "white")
 			if locked:
-				lock_label.configure(text=f"YOU ARE FREE !!!")
+				lock_window.canvas.itemconfigure(lock_label, text=f"YOU ARE FREE !!!")
 			CheckScreen()
 			return
 		CheckScreen()
 		if locked:
-			lock_label.configure(text=f"{remaining_time_str}")
+			lock_window.canvas.itemconfigure(lock_label, text=f"{remaining_time_str}")
 		return
 	remaining_time_str = str(datetime.utcfromtimestamp(remaining_time).strftime("%H:%M:%S"))
 	label.configure(text=f"{remaining_time_str}", fg = "white")
 	if locked:
-		lock_label.configure(text=f"{remaining_time_str}")
+		lock_window.canvas.itemconfigure(lock_label, text=f"{remaining_time_str}")
 	CheckScreen()
 
 logSaveFile = "saveLog.json"
