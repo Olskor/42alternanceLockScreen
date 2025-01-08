@@ -114,10 +114,10 @@ def Lock(e = None):
 	canvas.create_image(0, 0, anchor="nw", image=bg_image)
 	canvas.pack(fill="both", expand=True)
 	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
-	locked_by = canvas.create_text(270, 20, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
+	locked_by = canvas.create_text(540, 100, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
 	password_entry = tk.Entry(canvas, show="o", font=("Helvetica", 14))
-	password_entry.configure(bg="black", fg="white", width=50, relief="flat", highlightthickness=0, bd=0)
-	password_entry.pack(side="top", anchor="nw", padx=280, pady=10)
+	password_entry.configure(bg="gray", fg="white", width=25, height=5, relief="flat", highlightthickness=0, bd=0)
+	password_entry.pack(side="top", anchor="nw", padx=280, pady=100)
 	password_entry.focus_set()
 	lock_window.password_entry = password_entry
 	lock_window.bind('<Return>', lambda event: check_password())
