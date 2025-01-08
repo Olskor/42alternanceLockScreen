@@ -101,7 +101,7 @@ def Lock(e = None):
 	locked = True
 	locked_time = datetime.now()
 	os.system("gsettings set org.gnome.mutter overlay-key ''")
-	disable_shortcuts()
+	threading.Thread(target=disable_shortcuts).start()
 	lock_window = tk.Toplevel(root)
 	lock_window.attributes("-fullscreen", True)
 	lock_window.configure(bg="black")
@@ -137,7 +137,7 @@ def check_password():
 	user = os.getlogin()
 	if auth.authenticate(user, entered_password):
 		os.system("gsettings set org.gnome.mutter overlay-key 'Super_L'")
-		restore_shortcuts()
+		threading.thread(target=restore_shortcuts).start()
 		turn_on_screen()
 		locked = False
 		lock_window.destroy()
