@@ -95,10 +95,11 @@ def get_previous_login_time():
         json.dump(existing_data, file, indent=4)
 
 def Lock(e = None):
-	global locked, lock_window, lock_label, password_entry
+	global locked, lock_window, lock_label, password_entry, locked_time
 	if locked:
 		return
 	locked = True
+	locked_time = datetime.now()
 	#os.system("gsettings set org.gnome.mutter overlay-key ''")
 	#disable_shortcuts()
 	lock_window = tk.Toplevel(root)
@@ -122,6 +123,7 @@ def Lock(e = None):
 	lock_window.password_entry = password_entry
 	lock_window.bind('<Return>', lambda event: check_password())
 	lock_window.canvas = canvas
+	lock_window.locked_by = locked_by
 	lock_window.mainloop()
 	return
 
@@ -216,8 +218,14 @@ def CheckScreen():
     root.after(20, UpdateLabelTime)
 
 def UpdateLabelTime():
-	global label, last_login_time, offset, root, lock_label, lock_window, locked
+	global label, last_login_time, offset, root, lock_label, lock_window, locked, locked_time
 	current_time = datetime.now()
+	time_since_locked = current_time - locked_time
+	if time_since_locked.total_seconds() >= 60:
+		if locked:
+			lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : {time_since_locked.seconds // 60} minutes ago...\n Back sOOn..")
+			if time_since_locked.total_seconds() > 60 * 45:
+				lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : a long time ago...\n Back sOOn..")
 	if current_time.hour > 20:
 		label.configure(text=f"Time out it's 20h", fg = "white")
 		if locked:
