@@ -116,7 +116,7 @@ def Lock(e = None):
 	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
 	locked_by = canvas.create_text(540, 100, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
 	password_entry = tk.Entry(canvas, show="o", font=("Helvetica", 14))
-	password_entry.configure(bg="gray", fg="white", width=25, bd = 5, relief="flat", highlightthickness=0, bd=0)
+	password_entry.configure(bg="gray", fg="white", width=25, bd = 5, relief="flat", highlightthickness=0)
 	password_entry.pack(side="top", anchor="nw", padx=280, pady=100)
 	password_entry.focus_set()
 	lock_window.password_entry = password_entry
