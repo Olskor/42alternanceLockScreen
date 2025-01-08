@@ -115,7 +115,7 @@ def Lock(e = None):
 	lock_message = tk.Label(lock_window, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), bg="black", fg="white")
 	lock_message.pack(side="top", anchor="nw", padx=270, pady=0)
 	password_entry = tk.Entry(lock_window, show="o", font=("Helvetica", 14))
-	password_entry.configure(bg = "gray", width = 500)
+	password_entry.configure(bg="black", fg="white, "width=50, relief="flat", highlightthickness=0, bd=0)
 	password_entry.pack(side="top", anchor="nw", padx=280, pady=10)
 	password_entry.focus_set()
 	lock_window.password_entry = password_entry
