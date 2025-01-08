@@ -127,7 +127,6 @@ def check_password():
 	global lock_window, locked
 	entered_password = lock_window.password_entry.get()
 	password_entry.delete(0, "end")
-	password_entry.insert(0, "validating...")
 	password_entry.update()
 	user = os.getlogin()
 	auth = pam.pam()
