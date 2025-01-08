@@ -104,12 +104,12 @@ def Lock(e = None):
 	lock_window = tk.Toplevel(root)
 	lock_window.attributes("-fullscreen", True)
 	lock_window.configure(bg="black")
+	screen_width = lock_window.winfo_screenwidth()
+	screen_height = lock_window.winfo_screenheight()
 	canvas = tk.Canvas(lock_window, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
 	if os.path.exists("ft_lock_bkg.png"):
 		bg_image = tk.PhotoImage(file="ft_lock_bkg.png")
 		lock_window.bg_image = bg_image
-		screen_width = lock_window.winfo_screenwidth()
-		screen_height = lock_window.winfo_screenheight()
 	canvas.create_image(0, 0, anchor="nw", image=bg_image)
 	canvas.pack(fill="both", expand=True)
 	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
