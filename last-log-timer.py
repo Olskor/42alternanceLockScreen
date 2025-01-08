@@ -115,7 +115,10 @@ def Lock(e = None):
 	lock_message = tk.Label(lock_window, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), bg="black", fg="white")
 	lock_message.pack(side="top", anchor="nw", padx=270, pady=0)
 	password_entry = tk.Entry(lock_window, show="o", font=("Helvetica", 14))
-	password_entry.pack(side="top", anchor="nw", padx=300, pady=10)
+	password_entry.configure(width=400, font=("Helvetica", 14), bg="white", fg="black", highlightthickness=2, highlightbackground="black", highlightcolor="black", relief="solid", bd=1)
+	password_entry.pack_configure(ipady=5, ipadx=5)
+	lock_window.attributes("-alpha", 0.9)
+	password_entry.pack(side="top", anchor="nw", padx=270, pady=10)
 	password_entry.focus_set()
 	lock_window.password_entry = password_entry
 	lock_window.bind('<Return>', lambda event: check_password())
