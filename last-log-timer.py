@@ -104,8 +104,8 @@ def Lock(e = None):
 	lock_window = tk.Toplevel(root)
 	lock_window.attributes("-fullscreen", True)
 	lock_window.configure(bg="black")
-	if os.path.exists("ft_lock_bkg.jpg"):
-		bg_image = tk.PhotoImage(file="ft_lock_bkg.jpg")
+	if os.path.exists("ft_lock_bkg.png"):
+		bg_image = tk.PhotoImage(file="ft_lock_bkg.png")
 		bg_label = tk.Label(lock_window, image=bg_image)
 		bg_label.place(relwidth=1, relheight=1)
 		lock_window.bg_image = bg_image
