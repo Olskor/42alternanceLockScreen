@@ -111,26 +111,26 @@ def Lock(e = None):
 	lock_window.configure(bg="black")
 	screen_width = lock_window.winfo_screenwidth()
 	screen_height = lock_window.winfo_screenheight()
-	canvas = tk.Canvas(lock_window, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
+	lockcanvas = tk.Canvas(lock_window, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
 	if os.path.exists("/home/jauffret/Documents/42alternanceLockScreen/ft_lock_bkg.png"):
 		try:
 			bg_image = tk.PhotoImage(file="/home/jauffret/Documents/42alternanceLockScreen/ft_lock_bkg.png")
 			bg_image = bg_image.subsample(bg_image.width() // screen_width, bg_image.height() // screen_height)
 			lock_window.bg_image = bg_image
-			canvas.create_image(0, 0, anchor="nw", image=bg_image)
+			lockcanvas.create_image(0, 0, anchor="nw", image=bg_image)
 		except:
-			canvas.create_image(0, 0, anchor="nw")
+			lockcanvas.create_image(0, 0, anchor="nw")
 			print("Error loading background image")
-	canvas.pack(fill="both", expand=True)
-	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
-	locked_by = canvas.create_text(540, 100, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
-	password_entry = tk.Entry(canvas, show="o", font=("Helvetica", 14), insertbackground="white")
+	lockcanvas.pack(fill="both", expand=True)
+	lock_label = lockcanvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
+	locked_by = lockcanvas.create_text(540, 100, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
+	password_entry = tk.Entry(lockcanvas, show="o", font=("Helvetica", 14), insertbackground="white")
 	password_entry.configure(bg="#8FABFF", fg="#FFFFFF", width=30, bd=8, relief="flat", highlightthickness=0)
 	password_entry.pack(side="top", anchor="nw", padx=280, pady=150)
 	password_entry.focus_set()
 	lock_window.password_entry = password_entry
 	lock_window.bind('<Return>', lambda event: check_password())
-	lock_window.canvas = canvas
+	lock_window.canvas = lockcanvas
 	lock_window.locked_by = locked_by
 	lock_window.mainloop()
 	return
