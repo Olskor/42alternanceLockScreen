@@ -98,6 +98,7 @@ def Lock(e = None):
 	global locked, lock_window, lock_label, password_entry, locked_time
 	if locked:
 		return
+	reset_screen_off_timer()
 	locked = True
 	locked_time = datetime.now()
 	os.system("gsettings set org.gnome.mutter overlay-key ''")
@@ -288,7 +289,7 @@ label = tk.Label(frame, text=f"{time_difference}", justify="center", font=("Helv
 label.pack(expand="true")
 
 locked = False
-screen_off_timer = 10
+screen_off_timer = 15
 screen_off = False
 
 root.after(1, UpdateLabelTime)
@@ -297,7 +298,7 @@ root.after(1000, screen_off_locked)
 
 def reset_screen_off_timer():
 	global screen_off_timer
-	screen_off_timer = 10
+	screen_off_timer = 15
 
 root.bind_all('<Control_L><l>', Lock)
 root.bind_all('<Key>', lambda e: reset_screen_off_timer())
