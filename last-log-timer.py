@@ -100,8 +100,8 @@ def Lock(e = None):
 		return
 	locked = True
 	locked_time = datetime.now()
-	#os.system("gsettings set org.gnome.mutter overlay-key ''")
-	#disable_shortcuts()
+	os.system("gsettings set org.gnome.mutter overlay-key ''")
+	disable_shortcuts()
 	lock_window = tk.Toplevel(root)
 	lock_window.attributes("-fullscreen", True)
 	lock_window.configure(bg="black")
