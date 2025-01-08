@@ -106,7 +106,7 @@ def Lock(e = None):
 	lock_window.configure(bg="black")
 	canvas = tk.Canvas(lock_window, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
 	if os.path.exists("ft_lock_bkg.png"):
-		bg_image = tk.PhotoImage(file="ft_lock_bkg.png"))
+		bg_image = tk.PhotoImage(file="ft_lock_bkg.png")
 		lock_window.bg_image = bg_image
 		screen_width = lock_window.winfo_screenwidth()
 		screen_height = lock_window.winfo_screenheight()
