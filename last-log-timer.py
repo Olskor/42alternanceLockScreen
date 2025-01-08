@@ -114,10 +114,10 @@ def Lock(e = None):
 			bg_image = tk.PhotoImage(file="ft_lock_bkg.png")
 			bg_image = bg_image.subsample(bg_image.width() // screen_width, bg_image.height() // screen_height)
 			lock_window.bg_image = bg_image
+			canvas.create_image(0, 0, anchor="nw", image=bg_image)
 		except:
-			bg_image = None
+			canvas.create_image(0, 0, anchor="nw")
 			print("Error loading background image")
-	canvas.create_image(0, 0, anchor="nw", image=bg_image)
 	canvas.pack(fill="both", expand=True)
 	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
 	locked_by = canvas.create_text(540, 100, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
