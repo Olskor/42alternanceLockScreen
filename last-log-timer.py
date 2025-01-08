@@ -122,7 +122,7 @@ def Lock(e = None):
 			lockcanvas.create_image(0, 0, anchor="nw")
 			print("Error loading background image")
 	lockcanvas.pack(fill="both", expand=True)
-	lock_label = lockcanvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
+	lock_label = lockcanvas.create_text(screen_width - 20, screen_height - 20, text=root.label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
 	locked_by = lockcanvas.create_text(540, 100, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
 	password_entry = tk.Entry(lockcanvas, show="o", font=("Helvetica", 14), insertbackground="white")
 	password_entry.configure(bg="#8FABFF", fg="#FFFFFF", width=30, bd=8, relief="flat", highlightthickness=0)
