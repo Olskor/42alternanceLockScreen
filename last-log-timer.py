@@ -222,7 +222,7 @@ def CheckScreen():
     root.after(20, UpdateLabelTime)
 
 def UpdateLabelTime():
-	global label, last_login_time, offset, root, lock_label, lock_window, locked, locked_time
+	global last_login_time, offset, root, lock_label, lock_window, locked, locked_time
 	current_time = datetime.now()
 	if locked:
 		time_since_locked = current_time - locked_time
@@ -231,16 +231,16 @@ def UpdateLabelTime():
 			if time_since_locked.total_seconds() > 60 * 45:
 				lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : a long time ago...\n Back sOOn..")
 	if current_time.hour > 20:
-		label.configure(text=f"Time out it's 20h", fg = "white")
+		root.canvas.itemconfigure(root.label, text=f"Time out it's 20h", fg = "white")
 		if locked:
 			lock_window.canvas.itemconfigure(lock_label, text=f"Time out it's 20h")
 	if current_time.hour < 8:
 		if locked:
 			lock_window.canvas.itemconfigure(lock_label, text=f"It's to early !")
-		label.configure(text=f"It's to early !", fg = "white")
+		root.canvas.itemconfigure(root.label, text=f"It's to early !", fg = "white")
 	time_difference = current_time - last_login_time
 	if time_difference.total_seconds() >= 5.75 * 3600:
-		label.configure(text=f"Take a break!", fg = "white")
+		root.canvas.itemconfigure(root.label, text=f"Take a break!", fg = "white")
 		if locked:
 			lock_window.canvas.itemconfigure(lock_label, text=f"Take a break!")
 		CheckScreen()
@@ -250,11 +250,11 @@ def UpdateLabelTime():
 	if remaining_time < 600:
 		remaining_time_str = str(datetime.utcfromtimestamp(remaining_time).strftime("%M:%S.%f")[:-3])
 		if int(remaining_time % 2) == 0:
-			label.configure(text=f"{remaining_time_str}", fg = "white")
+			root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}", fg = "white")
 		if int(remaining_time % 2) == 1:
-			label.configure(text=f"{remaining_time_str}", fg = "red")
+			root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}", fg = "red")
 		if remaining_time <= 0:
-			label.configure(text=f"YOU ARE FREE !!!", fg = "white")
+			root.canvas.itemconfigure(root.label, text=f"YOU ARE FREE !!!", fg = "white")
 			if locked:
 				lock_window.canvas.itemconfigure(lock_label, text=f"YOU ARE FREE !!!")
 			CheckScreen()
@@ -264,7 +264,7 @@ def UpdateLabelTime():
 			lock_window.canvas.itemconfigure(lock_label, text=f"{remaining_time_str}")
 		return
 	remaining_time_str = str(datetime.utcfromtimestamp(remaining_time).strftime("%H:%M:%S"))
-	label.configure(text=f"{remaining_time_str}", fg = "white")
+	root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}", fg = "white")
 	if locked:
 		lock_window.canvas.itemconfigure(lock_label, text=f"{remaining_time_str}")
 	CheckScreen()
@@ -283,13 +283,26 @@ time_difference = current_time - last_login_time
 
 root = tk.Tk()
 root.title("Time remaning...")
+root.attributes("-fullscreen", True)
 root.configure(bg="black")
 
-frame = tk.Frame(root, bg = "black")
-frame.pack(anchor="center", expand="true")
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+canvas = tk.Canvas(root, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
+if os.path.exists("/home/jauffret/Documents/42alternanceLockScreen/bkg.png"):
+	try:
+		bg_image = tk.PhotoImage(file="/home/jauffret/Documents/42alternanceLockScreen/bkg.png")
+		bg_image = bg_image.subsample(bg_image.width() // screen_width, bg_image.height() // screen_height)
+		root.bg_image = bg_image
+		canvas.create_image(0, 0, anchor="nw", image=bg_image)
+	except:
+		canvas.create_image(0, 0, anchor="nw")
+		print("Error loading background image")
+canvas.pack(fill="both", expand=True)
 
-label = tk.Label(frame, text=f"{time_difference}", justify="center", font=("Helvetica", 200), bg = "black", fg = "white")
-label.pack(expand="true")
+label = canvas.create_text(screen_width // 2, screen_height // 2, text=f"{time_difference}", font=("Helvetica", 200), fill="white", anchor="center", justify="center")
+root.label = label
+root.canvas = canvas
 
 locked = False
 screen_off_timer = 15
