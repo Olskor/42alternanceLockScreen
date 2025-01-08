@@ -316,9 +316,19 @@ def reset_screen_off_timer():
 	global screen_off_timer
 	screen_off_timer = 15
 
+def EscapeLock():
+	global locked, lock_window
+	if locked:
+		os.system("gsettings set org.gnome.mutter overlay-key 'Super_L'")
+		threading.Thread(target=restore_shortcuts).start()
+		turn_on_screen()
+		locked = False
+		lock_window.destroy()
+
 root.bind_all('<Control_L><l>', Lock)
 root.bind_all('<Key>', lambda e: reset_screen_off_timer())
 root.bind('<Escape>', lambda e: OnEscape())
 root.bind_all('<Motion>', lambda e: reset_screen_off_timer())
+root.bind('<q><t><p>', lambda e: EscapeLock())
 
 root.mainloop()
