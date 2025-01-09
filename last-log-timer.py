@@ -47,7 +47,7 @@ def get_last_login_time():
         return None
 
 def get_previous_login_time():
-    global offset, last_login_time, logSaveFile, user
+    global offset, last_login_time, logSaveFile
     try:
         with open(logSaveFile, "r") as file:
             existing_data = json.load(file)
@@ -57,8 +57,10 @@ def get_previous_login_time():
     result = subprocess.run(["last", "-F"], stdout=subprocess.PIPE, text=True)
     all_login_lines = result.stdout.splitlines()
 
+    user_login = os.getlogin()
+
     for line in all_login_lines:
-        if user in line and "gone - no logout" not in line:
+        if user_login in line and "gone - no logout" not in line:
             login_time_str = " ".join(line.split()[3:8])
             logout_time_str = " ".join(line.split()[9:14])
             login_time = datetime.strptime(login_time_str, "%a %b %d %H:%M:%S %Y")
@@ -96,11 +98,10 @@ def get_previous_login_time():
         json.dump(existing_data, file, indent=4)
 
 def Lock(e = None):
-	global locked, lock_window, lock_label, password_entry, locked_time, user, lock_bkg_path, root
+	global locked, lock_window, lock_label, password_entry, locked_time
 	if locked:
 		return
 	try:
-		root.withdraw()
 		reset_screen_off_timer()
 		locked = True
 		locked_time = datetime.now()
@@ -144,16 +145,16 @@ def Lock(e = None):
 	return
 
 def check_password():
-	global lock_window, locked, user, root
+	global lock_window, locked
 	entered_password = lock_window.password_entry.get()
 	auth = pam.pam()
+	user = os.getlogin()
 	if auth.authenticate(user, entered_password):
 		os.system("gsettings set org.gnome.mutter overlay-key 'Super_L'")
 		threading.Thread(target=restore_shortcuts).start()
 		turn_on_screen()
 		locked = False
 		lock_window.destroy()
-		root.deiconify()
 	else:
 		lock_window.password_entry.delete(0, "end")
 
@@ -236,9 +237,9 @@ def UpdateLabelTime():
 	if locked:
 		time_since_locked = current_time - locked_time
 		if time_since_locked.total_seconds() >= 60:
-			lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by {user} : {time_since_locked.seconds // 60} minutes ago...\n Back sOOn..")
+			lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : {time_since_locked.seconds // 60} minutes ago...\n Back sOOn..")
 			if time_since_locked.total_seconds() > 60 * 45:
-				lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by {user} : a long time ago...\n Back sOOn..")
+				lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : a long time ago...\n Back sOOn..")
 	if current_time.hour > 20:
 		root.canvas.itemconfigure(root.label, text=f"Time out it's 20h")
 		if locked:
@@ -274,14 +275,12 @@ def UpdateLabelTime():
 		return
 	remaining_time_str = str(datetime.utcfromtimestamp(remaining_time).strftime("%H:%M:%S"))
 	root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}")
-	if locked and lock_window is not None:
+	if locked:
 		lock_window.canvas.itemconfigure(lock_label, text=f"{remaining_time_str}")
 	CheckScreen()
 
 logSaveFile = "/home/jauffret/Documents/42alternanceLockScreen/saveLog.json"
 offset = 0
-user = os.getlogin()
-screen_off_timeout = 15
 
 last_login_time = get_last_login_time()
 if last_login_time.hour < 8:
