@@ -354,9 +354,7 @@ def key_press_listener(key):
 def key_release_listener(key):
 	global pressed_keys
 	try:
-		pressed_keys.remove(key.char)
-	except KeyError:
-		pressed_keys.discard(key)
+		pressed_keys.discard(key.char)
 	except AttributeError:
 		pressed_keys.discard(key)
 
