@@ -8,6 +8,7 @@ import json
 import socket
 import os
 import pam
+from pynput import keyboard
 
 def get_all_shortcuts():
 	result = subprocess.run(["gsettings", "list-recursively"], stdout=subprocess.PIPE, text=True)
@@ -95,10 +96,11 @@ def get_previous_login_time():
         json.dump(existing_data, file, indent=4)
 
 def Lock(e = None):
-	global locked, lock_window, lock_label, password_entry, locked_time, user, lock_bkg_path
+	global locked, lock_window, lock_label, password_entry, locked_time, user, lock_bkg_path, root
 	if locked:
 		return
 	try:
+		root.withdraw()
 		reset_screen_off_timer()
 		locked = True
 		locked_time = datetime.now()
@@ -142,7 +144,7 @@ def Lock(e = None):
 	return
 
 def check_password():
-	global lock_window, locked, user
+	global lock_window, locked, user, root
 	entered_password = lock_window.password_entry.get()
 	auth = pam.pam()
 	if auth.authenticate(user, entered_password):
@@ -151,6 +153,7 @@ def check_password():
 		turn_on_screen()
 		locked = False
 		lock_window.destroy()
+		root.deiconify()
 	else:
 		lock_window.password_entry.delete(0, "end")
 
@@ -330,11 +333,33 @@ def small_time():
 	root.canvas.itemconfigure(root.label, font=("Helvetica", 30))
 	root.canvas.coords(root.label, screen_width - 150, screen_height - 20)
 
-root.bind_all('<Control_L><l>', Lock)
+	pressed_keys = set()
+
+def key_press_listener(key):
+	global pressed_keys
+	try:
+		pressed_keys.add(key.char)
+	except AttributeError:
+		pressed_keys.add(key)
+	if pressed_keys == {"Super_L", "l"}:
+		Lock()
+	if pressed_keys == {"Super_L", "Escape"}:
+		OnEscape()
+
+def key_release_listener(key):
+	global pressed_keys
+	try:
+		pressed_keys.remove(key.char)
+	except KeyError:
+		pressed_keys.remove(key)
+	except AttributeError:
+		pressed_keys.remove(key)
+
 root.bind_all('<Key>', lambda e: reset_screen_off_timer())
-root.bind('<Escape>', lambda e: OnEscape())
 root.bind_all('<Motion>', lambda e: reset_screen_off_timer())
 root.bind('<Up>', lambda e: big_time())
 root.bind('<Down>', lambda e: small_time())
+
+keyboard.Listener(on_press=key_press_listener, on_release=key_release_listener).start()
 
 root.mainloop()
