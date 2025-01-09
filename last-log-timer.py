@@ -311,7 +311,7 @@ if os.path.exists("/home/jauffret/Documents/42alternanceLockScreen/bkg.png"):
 canvas.pack(fill="both", expand=True)
 root.geometry(f"1000x200+0+50")
 
-label = canvas.create_text(0, 0, text=f"{time_difference}", font=("Helvetica", 200), fill="white", anchor="center", justify="center")
+label = canvas.create_text(20, 50, text=f"{time_difference}", font=("Helvetica", 20), fill="white", anchor="center", justify="center")
 root.label = label
 root.canvas = canvas
 
@@ -330,7 +330,7 @@ def reset_screen_off_timer():
 def big_time():
 	screen_width = root.winfo_screenwidth()
 	screen_height = root.winfo_screenheight()
-	root.canvas.itemconfigure(root.label, font=("Helvetica", 200))
+	root.canvas.itemconfigure(root.label, font=("Helvetica", 20))
 	root.canvas.coords(root.label, screen_width // 2, screen_height // 2)
 
 def small_time():
