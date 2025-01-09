@@ -361,7 +361,7 @@ def key_release_listener(key):
 
 def lock_check():
 	if lock_event.is_set():
-		Lock()
+		root.after(1, Lock)
 		lock_event.clear()
 	root.after(100, lock_check)
 
