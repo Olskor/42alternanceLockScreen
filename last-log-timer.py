@@ -102,7 +102,7 @@ def Lock(e = None):
 	if locked:
 		return
 	try:
-		global lock_window, lock_label
+		root.withdraw()
 		reset_screen_off_timer()
 		locked = True
 		locked_time = datetime.now()
@@ -143,6 +143,7 @@ def Lock(e = None):
 		turn_on_screen()
 		if lock_window is not None:
 			lock_window.destroy()
+		root.deiconify()
 	return
 
 def check_password():
@@ -156,6 +157,7 @@ def check_password():
 		turn_on_screen()
 		locked = False
 		lock_window.destroy()
+		root.deiconify()
 	else:
 		lock_window.password_entry.delete(0, "end")
 
@@ -337,13 +339,13 @@ def small_time():
 pressed_keys = set()
 
 def key_press_listener(key):
-	global pressed_keys
+	global pressed_keys, lock_window, lock_label
 	try:
 		pressed_keys.add(key.char)
 	except AttributeError:
 		pressed_keys.add(key)
 	if pressed_keys == {keyboard.Key.cmd, "l"}:
-		threading.Thread(target=Lock).start()
+		Lock()
 	if pressed_keys == {keyboard.Key.cmd, keyboard.Key.esc}:
 		OnEscape()
 
