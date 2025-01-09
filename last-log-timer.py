@@ -95,15 +95,15 @@ def get_previous_login_time():
 					existing_data.append(new_entry)
 					break
 
-    offset = 0
-    for entry in existing_data:
-        login_time = datetime.strptime(entry["login"], "%Y-%m-%d %H:%M:%S")
-        if login_time.date() == datetime.now().date() and login_time != last_login_time:
-            logout_time = datetime.strptime(entry["logout"], "%Y-%m-%d %H:%M:%S")
-            offset += (logout_time - login_time).total_seconds()
-    
-    with open(logSaveFile, "w") as file:
-        json.dump(existing_data, file, indent=4)
+	offset = 0
+	for entry in existing_data:
+		login_time = datetime.strptime(entry["login"], "%Y-%m-%d %H:%M:%S")
+		if login_time.date() == datetime.now().date() and login_time != last_login_time:
+			logout_time = datetime.strptime(entry["logout"], "%Y-%m-%d %H:%M:%S")
+			offset += (logout_time - login_time).total_seconds()
+
+	with open(logSaveFile, "w") as file:
+		json.dump(existing_data, file, indent=4)
 
 def Lock(e = None):
 	global locked, lock_window, lock_label, password_entry, locked_time
