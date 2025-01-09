@@ -44,7 +44,7 @@ def get_last_login_time():
         return None
 
 def get_previous_login_time():
-    global offset, last_login_time, logSaveFile
+    global offset, last_login_time, logSaveFile, user
     try:
         with open(logSaveFile, "r") as file:
             existing_data = json.load(file)
@@ -54,10 +54,8 @@ def get_previous_login_time():
     result = subprocess.run(["last", "-F"], stdout=subprocess.PIPE, text=True)
     all_login_lines = result.stdout.splitlines()
 
-    user_login = os.getlogin()
-
     for line in all_login_lines:
-        if user_login in line and "gone - no logout" not in line:
+        if user in line and "gone - no logout" not in line:
             login_time_str = " ".join(line.split()[3:8])
             logout_time_str = " ".join(line.split()[9:14])
             login_time = datetime.strptime(login_time_str, "%a %b %d %H:%M:%S %Y")
@@ -95,7 +93,7 @@ def get_previous_login_time():
         json.dump(existing_data, file, indent=4)
 
 def Lock(e = None):
-	global locked, lock_window, lock_label, password_entry, locked_time
+	global locked, lock_window, lock_label, password_entry, locked_time, user
 	if locked:
 		return
 	reset_screen_off_timer()
@@ -120,7 +118,7 @@ def Lock(e = None):
 			print("Error loading background image")
 	canvas.pack(fill="both", expand=True)
 	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
-	locked_by = canvas.create_text(540, 100, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
+	locked_by = canvas.create_text(540, 100, text=f"Locked by {user} : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
 	password_entry = tk.Entry(canvas, show="o", font=("Helvetica", 14), insertbackground="white")
 	password_entry.configure(bg="#9194B6", fg="#FFFFFF", width=30, bd=8, relief="flat", highlightthickness=0)
 	password_entry.pack(side="top", anchor="nw", padx=280, pady=150)
@@ -133,13 +131,11 @@ def Lock(e = None):
 	return
 
 def check_password():
-	global lock_window, locked
+	global lock_window, locked, user
 	entered_password = lock_window.password_entry.get()
 	password_entry.delete(0, "end")
 	password_entry.update()
-	user = os.getlogin()
 	auth = pam.pam()
-	user = os.getlogin()
 	if auth.authenticate(user, entered_password):
 		os.system("gsettings set org.gnome.mutter overlay-key 'Super_L'")
 		threading.Thread(target=restore_shortcuts).start()
@@ -228,9 +224,9 @@ def UpdateLabelTime():
 	if locked:
 		time_since_locked = current_time - locked_time
 		if time_since_locked.total_seconds() >= 60:
-			lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : {time_since_locked.seconds // 60} minutes ago...\n Back sOOn..")
+			lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by {user} : {time_since_locked.seconds // 60} minutes ago...\n Back sOOn..")
 			if time_since_locked.total_seconds() > 60 * 45:
-				lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : a long time ago...\n Back sOOn..")
+				lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by {user} : a long time ago...\n Back sOOn..")
 	if current_time.hour > 20:
 		label.configure(text=f"Time out it's 20h", fg = "white")
 		if locked:
@@ -271,6 +267,9 @@ def UpdateLabelTime():
 	CheckScreen()
 
 logSaveFile = "saveLog.json"
+user = os.getlogin()
+screen_off_timeout = 15
+
 offset = 0
 last_login_time = get_last_login_time()
 if last_login_time.hour < 8:
@@ -293,7 +292,7 @@ label = tk.Label(frame, text=f"{time_difference}", justify="center", font=("Helv
 label.pack(expand="true")
 
 locked = False
-screen_off_timer = 15
+screen_off_timer = screen_off_timeout
 screen_off = False
 
 root.after(1, UpdateLabelTime)
@@ -302,7 +301,7 @@ root.after(1000, screen_off_locked)
 
 def reset_screen_off_timer():
 	global screen_off_timer
-	screen_off_timer = 15
+	screen_off_timer = screen_off_timeout
 
 root.bind_all('<Control_L><l>', Lock)
 root.bind_all('<Key>', lambda e: reset_screen_off_timer())
