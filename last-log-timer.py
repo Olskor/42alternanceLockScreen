@@ -318,9 +318,23 @@ def reset_screen_off_timer():
 	global screen_off_timer
 	screen_off_timer = screen_off_timeout
 
+def big_time():
+	screen_width = root.winfo_screenwidth()
+	screen_height = root.winfo_screenheight()
+	root.canvas.itemconfigure(root.label, font=("Helvetica", 200))
+	root.canvas.coords(root.label, screen_width // 2, screen_height // 2)
+
+def small_time():
+	screen_width = root.winfo_screenwidth()
+	screen_height = root.winfo_screenheight()
+	root.canvas.itemconfigure(root.label, font=("Helvetica", 30))
+	root.canvas.coords(root.label, screen_width - 20, screen_height - 20)
+
 root.bind_all('<Control_L><l>', Lock)
 root.bind_all('<Key>', lambda e: reset_screen_off_timer())
 root.bind('<Escape>', lambda e: OnEscape())
 root.bind_all('<Motion>', lambda e: reset_screen_off_timer())
+root.bind('<up>', lambda e: big_time())
+root.bind('<down>', lambda e: small_time())
 
 root.mainloop()
