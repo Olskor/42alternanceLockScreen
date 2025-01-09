@@ -102,6 +102,7 @@ def Lock(e = None):
 	if locked:
 		return
 	try:
+		global lock_window, lock_label
 		reset_screen_off_timer()
 		locked = True
 		locked_time = datetime.now()
