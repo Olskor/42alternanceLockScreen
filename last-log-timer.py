@@ -296,8 +296,6 @@ root.overrideredirect(True)
 root.attributes("-topmost", False)
 root.configure(bg="black")
 
-root.geometry(f"1000x200+0+50")
-
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 canvas = tk.Canvas(root, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
@@ -306,11 +304,12 @@ if os.path.exists("/home/jauffret/Documents/42alternanceLockScreen/bkg.png"):
 		bg_image = tk.PhotoImage(file="/home/jauffret/Documents/42alternanceLockScreen/bkg.png")
 		bg_image = bg_image.subsample(bg_image.width() // screen_width, bg_image.height() // screen_height)
 		root.bg_image = bg_image
-		canvas.create_image(0, 0, anchor="nw", image=bg_image)
+		canvas.create_image(0, -50, anchor="nw", image=bg_image)  # Shift the image 50 px lower
 	except:
-		canvas.create_image(0, 0, anchor="nw")
+		canvas.create_image(0, -50, anchor="nw")  # Shift the image 50 px lower
 		print("Error loading background image")
 canvas.pack(fill="both", expand=True)
+root.geometry(f"1000x200+0+50")
 
 label = canvas.create_text(screen_width // 2, screen_height // 2, text=f"{time_difference}", font=("Helvetica", 200), fill="white", anchor="center", justify="center")
 root.label = label
