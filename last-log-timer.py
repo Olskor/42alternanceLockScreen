@@ -117,7 +117,7 @@ def Lock(e = None):
 			canvas.create_image(0, 0, anchor="nw")
 			print("Error loading background image")
 	canvas.pack(fill="both", expand=True)
-	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text=label.cget("text"), font=("Helvetica", 20), fill="white", anchor="se")
+	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text="", font=("Helvetica", 20), fill="white", anchor="se")
 	locked_by = canvas.create_text(540, 100, text=f"Locked by {user} : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
 	password_entry = tk.Entry(canvas, show="o", font=("Helvetica", 14), insertbackground="white")
 	password_entry.configure(bg="#9194B6", fg="#FFFFFF", width=30, bd=8, relief="flat", highlightthickness=0)
