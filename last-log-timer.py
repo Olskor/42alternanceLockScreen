@@ -339,6 +339,7 @@ def key_press_listener(key):
 	global pressed_keys
 	try:
 		pressed_keys.add(key.char)
+		print(f"Pressed: {key.char}")
 	except AttributeError:
 		pressed_keys.add(key)
 	if pressed_keys == {"Super_L", "l"}:
