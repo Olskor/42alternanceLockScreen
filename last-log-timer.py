@@ -61,7 +61,6 @@ def get_previous_login_time():
 
     for line in all_login_lines:
         if user_login in line and "gone - no logout" not in line:
-            print(line)
             login_time_str = " ".join(line.split()[3:8])
             logout_time_str = " ".join(line.split()[9:14])
             login_time = datetime.strptime(login_time_str, "%a %b %d %H:%M:%S %Y")
@@ -86,6 +85,14 @@ def get_previous_login_time():
                     entry["logout"] = logout_time.strftime("%Y-%m-%d %H:%M:%S")
                     total = logout_time - login_time
                     entry["ellapsed-time"] = str(total).split('.')[0]
+				else:
+					new_entry = {
+						"login": login_time.strftime("%Y-%m-%d %H:%M:%S"),
+						"logout": logout_time.strftime("%Y-%m-%d %H:%M:%S"),
+						"ellapsed-time": str(logout_time - login_time).split('.')[0]
+						"poste": socket.gethostname()
+					}
+					existing_data.append(new_entry)
                     break
 
     offset = 0
