@@ -25,7 +25,6 @@ shortcuts_to_disable = get_all_shortcuts()
 
 
 def disable_shortcuts():
-	return
 	for shortcut in shortcuts_to_disable:
 		os.system(f"gsettings set {shortcut} []")
 
