@@ -281,6 +281,7 @@ def UpdateLabelTime():
 
 logSaveFile = "/home/jauffret/Documents/42alternanceLockScreen/saveLog.json"
 offset = 0
+screen_off_timeout = 15
 
 last_login_time = get_last_login_time()
 if last_login_time.hour < 8:
