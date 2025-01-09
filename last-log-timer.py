@@ -293,7 +293,7 @@ time_difference = current_time - last_login_time
 root = tk.Tk()
 root.title("Time remaning...")
 root.overrideredirect(True)
-root.attributes("-topmost", True)
+root.attributes("-topmost", False)
 root.configure(bg="black")
 
 root.geometry("500x100")
