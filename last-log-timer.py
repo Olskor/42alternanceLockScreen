@@ -289,7 +289,8 @@ time_difference = current_time - last_login_time
 
 root = tk.Tk()
 root.title("Time remaning...")
-root.attributes("-fullscreen", True)
+root.overrideredirect(True)
+root.attributes("-topmost", False)
 root.configure(bg="black")
 
 screen_width = root.winfo_screenwidth()
