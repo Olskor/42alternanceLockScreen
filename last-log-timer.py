@@ -296,7 +296,7 @@ root.overrideredirect(True)
 root.attributes("-topmost", False)
 root.configure(bg="black")
 
-root.geometry("500x100")
+root.geometry(f"1000x200+0+50")
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
