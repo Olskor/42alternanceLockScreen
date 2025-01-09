@@ -61,7 +61,7 @@ def get_previous_login_time():
 
     for line in all_login_lines:
         if user_login in line and "gone - no logout" not in line:
-			print(line)
+            print(line)
             login_time_str = " ".join(line.split()[3:8])
             logout_time_str = " ".join(line.split()[9:14])
             login_time = datetime.strptime(login_time_str, "%a %b %d %H:%M:%S %Y")
