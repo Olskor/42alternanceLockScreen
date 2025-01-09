@@ -328,7 +328,7 @@ def small_time():
 	screen_width = root.winfo_screenwidth()
 	screen_height = root.winfo_screenheight()
 	root.canvas.itemconfigure(root.label, font=("Helvetica", 30))
-	root.canvas.coords(root.label, screen_width - 20, screen_height - 20)
+	root.canvas.coords(root.label, screen_width - 50, screen_height - 20)
 
 root.bind_all('<Control_L><l>', Lock)
 root.bind_all('<Key>', lambda e: reset_screen_off_timer())
