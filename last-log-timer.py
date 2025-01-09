@@ -343,7 +343,7 @@ def key_press_listener(key):
 	except AttributeError:
 		pressed_keys.add(key)
 	if pressed_keys == {keyboard.Key.cmd, "l"}:
-		Lock()
+		threading.Thread(target=Lock).start()
 	if pressed_keys == {keyboard.Key.cmd, keyboard.Key.esc}:
 		OnEscape()
 
@@ -360,11 +360,6 @@ root.bind_all('<Key>', lambda e: reset_screen_off_timer())
 root.bind_all('<Motion>', lambda e: reset_screen_off_timer())
 root.bind('<Up>', lambda e: big_time())
 root.bind('<Down>', lambda e: small_time())
-
-lock_window = None
-lock_label = None
-password_entry = None
-locked_time = None
 
 keyboard.Listener(on_press=key_press_listener, on_release=key_release_listener).start()
 
