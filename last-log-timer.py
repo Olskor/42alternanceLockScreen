@@ -361,6 +361,11 @@ root.bind_all('<Motion>', lambda e: reset_screen_off_timer())
 root.bind('<Up>', lambda e: big_time())
 root.bind('<Down>', lambda e: small_time())
 
+lock_window = None
+lock_label = None
+password_entry = None
+locked_time = None
+
 keyboard.Listener(on_press=key_press_listener, on_release=key_release_listener).start()
 
 root.mainloop()
