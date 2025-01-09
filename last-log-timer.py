@@ -47,53 +47,53 @@ def get_last_login_time():
         return None
 
 def get_previous_login_time():
-    global offset, last_login_time, logSaveFile
-    try:
-        with open(logSaveFile, "r") as file:
-            existing_data = json.load(file)
-    except:
-        return 0
-    
-    result = subprocess.run(["last", "-F"], stdout=subprocess.PIPE, text=True)
-    all_login_lines = result.stdout.splitlines()
+	global offset, last_login_time, logSaveFile
+	try:
+		with open(logSaveFile, "r") as file:
+			existing_data = json.load(file)
+	except:
+		return 0
+	
+	result = subprocess.run(["last", "-F"], stdout=subprocess.PIPE, text=True)
+	all_login_lines = result.stdout.splitlines()
 
-    user_login = os.getlogin()
+	user_login = os.getlogin()
 
-    for line in all_login_lines:
-        if user_login in line and "gone - no logout" not in line:
-            login_time_str = " ".join(line.split()[3:8])
-            logout_time_str = " ".join(line.split()[9:14])
-            login_time = datetime.strptime(login_time_str, "%a %b %d %H:%M:%S %Y")
-            if "crash" in logout_time_str:
-                logout_time_str = logout_time_str.split()[1][1:-1]
-                append = datetime.strptime(logout_time_str, "%H:%M")
-                logout_time = login_time + timedelta(hours=append.hour, minutes=append.minute)
-            else:
-                logout_time = datetime.strptime(logout_time_str, "%a %b %d %H:%M:%S %Y")
-            if login_time.date() < datetime.strptime("2025-01-06 00:00:00", "%Y-%m-%d %H:%M:%S").date():
-                continue
-            if login_time.hour < 8:
-                login_time = login_time.replace(hour = 8, minute = 0, second = 0, microsecond = 0)
-                if logout_time.hour < 8:
-                    continue
-            if login_time.hour > 20:
-                continue
-            if logout_time.hour > 20:
-                logout_time = logout_time.replace(hour = 20, minute = 0, second = 0, microsecond = 0)
-            for entry in existing_data:
-                if login_time == datetime.strptime(entry["login"], "%Y-%m-%d %H:%M:%S"):
-                    entry["logout"] = logout_time.strftime("%Y-%m-%d %H:%M:%S")
-                    total = logout_time - login_time
-                    entry["ellapsed-time"] = str(total).split('.')[0]
+	for line in all_login_lines:
+		if user_login in line and "gone - no logout" not in line:
+			login_time_str = " ".join(line.split()[3:8])
+			logout_time_str = " ".join(line.split()[9:14])
+			login_time = datetime.strptime(login_time_str, "%a %b %d %H:%M:%S %Y")
+			if "crash" in logout_time_str:
+				logout_time_str = logout_time_str.split()[1][1:-1]
+				append = datetime.strptime(logout_time_str, "%H:%M")
+				logout_time = login_time + timedelta(hours=append.hour, minutes=append.minute)
+			else:
+				logout_time = datetime.strptime(logout_time_str, "%a %b %d %H:%M:%S %Y")
+			if login_time.date() < datetime.strptime("2025-01-06 00:00:00", "%Y-%m-%d %H:%M:%S").date():
+				continue
+			if login_time.hour < 8:
+				login_time = login_time.replace(hour = 8, minute = 0, second = 0, microsecond = 0)
+				if logout_time.hour < 8:
+					continue
+			if login_time.hour > 20:
+				continue
+			if logout_time.hour > 20:
+				logout_time = logout_time.replace(hour = 20, minute = 0, second = 0, microsecond = 0)
+			for entry in existing_data:
+				if login_time == datetime.strptime(entry["login"], "%Y-%m-%d %H:%M:%S"):
+					entry["logout"] = logout_time.strftime("%Y-%m-%d %H:%M:%S")
+					total = logout_time - login_time
+					entry["ellapsed-time"] = str(total).split('.')[0]
 				else:
 					new_entry = {
 						"login": login_time.strftime("%Y-%m-%d %H:%M:%S"),
 						"logout": logout_time.strftime("%Y-%m-%d %H:%M:%S"),
-						"ellapsed-time": str(logout_time - login_time).split('.')[0]
+						"ellapsed-time": str(logout_time - login_time).split('.')[0],
 						"poste": socket.gethostname()
 					}
 					existing_data.append(new_entry)
-                    break
+					break
 
     offset = 0
     for entry in existing_data:
