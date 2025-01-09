@@ -96,38 +96,47 @@ def Lock(e = None):
 	global locked, lock_window, lock_label, password_entry, locked_time, user, lock_bkg_path
 	if locked:
 		return
-	reset_screen_off_timer()
-	locked = True
-	locked_time = datetime.now()
-	os.system("gsettings set org.gnome.mutter overlay-key ''")
-	threading.Thread(target=disable_shortcuts).start()
-	lock_window = tk.Toplevel(root)
-	lock_window.attributes("-fullscreen", True)
-	lock_window.configure(bg="black")
-	screen_width = lock_window.winfo_screenwidth()
-	screen_height = lock_window.winfo_screenheight()
-	canvas = tk.Canvas(lock_window, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
-	if os.path.exists(lock_bkg_path):
-		try:
-			bg_image = tk.PhotoImage(file=lock_bkg_path)
-			bg_image = bg_image.subsample(bg_image.width() // screen_width, bg_image.height() // screen_height)
-			lock_window.bg_image = bg_image
-			canvas.create_image(0, 0, anchor="nw", image=bg_image)
-		except:
-			canvas.create_image(0, 0, anchor="nw")
-			print("Error loading background image")
-	canvas.pack(fill="both", expand=True)
-	lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text="", font=("Helvetica", 20), fill="white", anchor="se")
-	locked_by = canvas.create_text(540, 100, text=f"Locked by {user} : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
-	password_entry = tk.Entry(canvas, show="o", font=("Helvetica", 14), insertbackground="white")
-	password_entry.configure(bg="#9194B6", fg="#FFFFFF", width=30, bd=8, relief="flat", highlightthickness=0)
-	password_entry.pack(side="top", anchor="nw", padx=280, pady=150)
-	password_entry.focus_set()
-	lock_window.password_entry = password_entry
-	lock_window.bind('<Return>', lambda event: check_password())
-	lock_window.canvas = canvas
-	lock_window.locked_by = locked_by
-	lock_window.mainloop()
+	try:
+		reset_screen_off_timer()
+		locked = True
+		locked_time = datetime.now()
+		os.system("gsettings set org.gnome.mutter overlay-key ''")
+		threading.Thread(target=disable_shortcuts).start()
+		lock_window = tk.Toplevel(root)
+		lock_window.attributes("-fullscreen", True)
+		lock_window.configure(bg="black")
+		screen_width = lock_window.winfo_screenwidth()
+		screen_height = lock_window.winfo_screenheight()
+		canvas = tk.Canvas(lock_window, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
+		if os.path.exists(lock_bkg_path):
+			try:
+				bg_image = tk.PhotoImage(file=lock_bkg_path)
+				bg_image = bg_image.subsample(bg_image.width() // screen_width, bg_image.height() // screen_height)
+				lock_window.bg_image = bg_image
+				canvas.create_image(0, 0, anchor="nw", image=bg_image)
+			except:
+				canvas.create_image(0, 0, anchor="nw")
+				print("Error loading background image")
+		canvas.pack(fill="both", expand=True)
+		lock_label = canvas.create_text(screen_width - 20, screen_height - 20, text="", font=("Helvetica", 20), fill="white", anchor="se")
+		locked_by = canvas.create_text(540, 100, text=f"Locked by {user} : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
+		password_entry = tk.Entry(canvas, show="o", font=("Helvetica", 14), insertbackground="white")
+		password_entry.configure(bg="#9194B6", fg="#FFFFFF", width=30, bd=8, relief="flat", highlightthickness=0)
+		password_entry.pack(side="top", anchor="nw", padx=280, pady=150)
+		password_entry.focus_set()
+		lock_window.password_entry = password_entry
+		lock_window.bind('<Return>', lambda event: check_password())
+		lock_window.canvas = canvas
+		lock_window.locked_by = locked_by
+		lock_window.mainloop()
+	except Exception as e:
+		print(f"Error: {e}")
+		locked = False
+		os.system("gsettings set org.gnome.mutter overlay-key 'Super_L'")
+		restore_shortcuts()
+		turn_on_screen()
+		if lock_window is not None:
+			lock_window.destroy()
 	return
 
 def check_password():
