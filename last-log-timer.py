@@ -341,9 +341,9 @@ def key_press_listener(key):
 		pressed_keys.add(key.char)
 	except AttributeError:
 		pressed_keys.add(key)
-	if pressed_keys == {key.Super_L, "l"}:
+	if pressed_keys == {keyboard.Key.cmd, "l"}:
 		Lock()
-	if pressed_keys == {key.Super_L, "Escape"}:
+	if pressed_keys == {keyboard.Key.cmd, keyboard.Key.esc}:
 		OnEscape()
 
 def key_release_listener(key):
