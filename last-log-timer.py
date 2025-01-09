@@ -311,7 +311,7 @@ if os.path.exists("/home/jauffret/Documents/42alternanceLockScreen/bkg.png"):
 canvas.pack(fill="both", expand=True)
 root.geometry(f"1000x200+0+50")
 
-label = canvas.create_text(screen_width // 2, screen_height // 2, text=f"{time_difference}", font=("Helvetica", 200), fill="white", anchor="center", justify="center")
+label = canvas.create_text(0, 0, text=f"{time_difference}", font=("Helvetica", 200), fill="white", anchor="center", justify="center")
 root.label = label
 root.canvas = canvas
 
