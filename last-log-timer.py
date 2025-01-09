@@ -333,7 +333,7 @@ def small_time():
 	root.canvas.itemconfigure(root.label, font=("Helvetica", 30))
 	root.canvas.coords(root.label, screen_width - 150, screen_height - 20)
 
-	pressed_keys = set()
+pressed_keys = set()
 
 def key_press_listener(key):
 	global pressed_keys
