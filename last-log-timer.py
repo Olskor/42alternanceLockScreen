@@ -337,6 +337,7 @@ def small_time():
 	root.canvas.coords(root.label, screen_width - 150, screen_height - 20)
 
 pressed_keys = set()
+lock_event = threading.Event()
 
 def key_press_listener(key):
 	global pressed_keys, lock_window, lock_label
@@ -345,7 +346,7 @@ def key_press_listener(key):
 	except AttributeError:
 		pressed_keys.add(key)
 	if pressed_keys == {keyboard.Key.cmd, "l"}:
-		Lock()
+		lock_event.set()
 	if pressed_keys == {keyboard.Key.cmd, keyboard.Key.esc}:
 		OnEscape()
 
@@ -358,11 +359,18 @@ def key_release_listener(key):
 	except AttributeError:
 		pressed_keys.remove(key)
 
+def lock_check():
+	if lock_event.is_set():
+		Lock()
+		lock_event.clear()
+	root.after(100, lock_check)
+
 root.bind_all('<Key>', lambda e: reset_screen_off_timer())
 root.bind_all('<Motion>', lambda e: reset_screen_off_timer())
 root.bind('<Up>', lambda e: big_time())
 root.bind('<Down>', lambda e: small_time())
 
 keyboard.Listener(on_press=key_press_listener, on_release=key_release_listener).start()
+root.after(100, lock_check)
 
 root.mainloop()
