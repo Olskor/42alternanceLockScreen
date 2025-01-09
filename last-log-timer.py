@@ -356,9 +356,9 @@ def key_release_listener(key):
 	try:
 		pressed_keys.remove(key.char)
 	except KeyError:
-		pressed_keys.remove(key)
+		pressed_keys.discard(key)
 	except AttributeError:
-		pressed_keys.remove(key)
+		pressed_keys.discard(key)
 
 def lock_check():
 	if lock_event.is_set():
