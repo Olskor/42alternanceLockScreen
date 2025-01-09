@@ -300,7 +300,7 @@ screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 canvas = tk.Canvas(root, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
 canvas.pack(fill="both", expand=True)
-root.geometry(f"200x48+500+0")
+root.geometry(f"{screen_width-600}x48+300+0")
 
 label = canvas.create_text(100, 30, text=f"{time_difference}", font=("Helvetica", 16), fill="white", anchor="center", justify="center")
 root.label = label
