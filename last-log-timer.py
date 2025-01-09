@@ -274,7 +274,7 @@ def UpdateLabelTime():
 		return
 	remaining_time_str = str(datetime.utcfromtimestamp(remaining_time).strftime("%H:%M:%S"))
 	root.canvas.itemconfigure(root.label, text=f"{remaining_time_str}")
-	if locked:
+	if locked and lock_window is not None:
 		lock_window.canvas.itemconfigure(lock_label, text=f"{remaining_time_str}")
 	CheckScreen()
 
