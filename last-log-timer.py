@@ -315,7 +315,7 @@ root.after(1000, screen_off_locked)
 def reset_screen_off_timer():
 	global screen_off_timer
 	screen_off_timer = 15
-	
+
 def big_time():
 	screen_width = root.winfo_screenwidth()
 	screen_height = root.winfo_screenheight()
