@@ -309,9 +309,9 @@ if os.path.exists("/home/jauffret/Documents/42alternanceLockScreen/bkg.png"):
 		canvas.create_image(0, -50, anchor="nw")  # Shift the image 50 px lower
 		print("Error loading background image")
 canvas.pack(fill="both", expand=True)
-root.geometry(f"1000x200+0+50")
+root.geometry(f"200x50+0+50")
 
-label = canvas.create_text(500, 120, text=f"{time_difference}", font=("Helvetica", 100), fill="white", anchor="center", justify="center")
+label = canvas.create_text(100, 30, text=f"{time_difference}", font=("Helvetica", 20), fill="white", anchor="center", justify="center")
 root.label = label
 root.canvas = canvas
 
