@@ -81,6 +81,13 @@ def get_previous_login_time():
                     total = logout_time - login_time
                     entry["ellapsed-time"] = str(total).split('.')[0]
                     break
+			unique_entries = []
+			seen_logins = set()
+			for entry in existing_data:
+				if entry["login"] not in seen_logins:
+					unique_entries.append(entry)
+					seen_logins.add(entry["login"])
+			existing_data = unique_entries
 
     offset = 0
     for entry in existing_data:
