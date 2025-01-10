@@ -9,10 +9,6 @@ import socket
 import os
 import pam
 from pynput import keyboard
-from Xlib import X, display
-
-disp = display.Display()
-rootDisplay = disp.screen().root
 
 def get_all_shortcuts():
 	result = subprocess.run(["gsettings", "list-recursively"], stdout=subprocess.PIPE, text=True)
@@ -30,14 +26,12 @@ shortcuts_to_disable = get_all_shortcuts()
 
 
 def disable_shortcuts():
-	#for shortcut in shortcuts_to_disable:
-	#	os.system(f"gsettings set {shortcut} []")
-	rootDisplay.grab_keyboard(True, X.GrabModeAsync, X.GrabModeAsync, X.CurrentTime)
+	for shortcut in shortcuts_to_disable:
+		os.system(f"gsettings set {shortcut} []")
 
 def restore_shortcuts():
-    #for shortcut in shortcuts_to_disable:
-    #    os.system(f"gsettings reset {shortcut}")
-	rootDisplay.grab_keyboard(True, X.GrabModeAsync, X.GrabModeAsync, X.CurrentTime)
+    for shortcut in shortcuts_to_disable:
+        os.system(f"gsettings reset {shortcut}")
 
 def get_last_login_time():
     try:
@@ -128,7 +122,7 @@ def Lock(e = None):
 		os.system("gsettings set org.gnome.mutter overlay-key ''")
 		threading.Thread(target=disable_shortcuts).start()
 		lock_window = tk.Toplevel(root)
-		#lock_window.attributes("-fullscreen", True)
+		lock_window.attributes("-fullscreen", True)
 		lock_window.configure(bg="black")
 		screen_width = lock_window.winfo_screenwidth()
 		screen_height = lock_window.winfo_screenheight()
