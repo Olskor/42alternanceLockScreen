@@ -35,7 +35,7 @@ def get_last_login_time():
         result = subprocess.run(["last", "-F"], stdout=subprocess.PIPE, text=True)
         last_login_line = result.stdout.splitlines()
         for line in last_login_line:
-            if "gone - no logout" in line:
+            if user in line and "gone - no logout" in line:
                 last_login_line = line
         last_login_time_str = " ".join(last_login_line.split()[3:8])
         return datetime.strptime(last_login_time_str, "%a %b %d %H:%M:%S %Y")
