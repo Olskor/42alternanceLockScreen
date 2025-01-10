@@ -32,12 +32,12 @@ shortcuts_to_disable = get_all_shortcuts()
 def disable_shortcuts():
 	#for shortcut in shortcuts_to_disable:
 	#	os.system(f"gsettings set {shortcut} []")
-	root.grab_keyboard(True, X.GrabModeAsync, X.GrabModeAsync, X.CurrentTime)
+	rootDisplay.grab_keyboard(True, X.GrabModeAsync, X.GrabModeAsync, X.CurrentTime)
 
 def restore_shortcuts():
     #for shortcut in shortcuts_to_disable:
     #    os.system(f"gsettings reset {shortcut}")
-	root.grab_keyboard(True, X.GrabModeAsync, X.GrabModeAsync, X.CurrentTime)
+	rootDisplay.grab_keyboard(True, X.GrabModeAsync, X.GrabModeAsync, X.CurrentTime)
 
 def get_last_login_time():
     try:
