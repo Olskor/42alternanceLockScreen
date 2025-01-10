@@ -207,11 +207,6 @@ def OnEscape():
     restore_shortcuts()
     turn_on_screen()
 
-def PreventLock():
-    pyautogui.moveRel(0, 1)
-    pyautogui.moveRel(0, -1)
-    root.after(1000 * 60 * 4, PreventLock)
-
 def turn_off_screen():
     os.system("xset dpms force off")
 
@@ -324,7 +319,6 @@ screen_off_timer = screen_off_timeout
 screen_off = False
 
 root.after(1, UpdateLabelTime)
-root.after(1000, PreventLock)
 root.after(1000, screen_off_locked)
 
 def reset_screen_off_timer():
