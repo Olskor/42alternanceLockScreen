@@ -57,10 +57,8 @@ def get_previous_login_time():
 	result = subprocess.run(["last", "-F"], stdout=subprocess.PIPE, text=True)
 	all_login_lines = result.stdout.splitlines()
 
-	user_login = os.getlogin()
-
 	for line in all_login_lines:
-		if user_login in line and "gone - no logout" not in line:
+		if user in line and "gone - no logout" not in line:
 			login_time_str = " ".join(line.split()[3:8])
 			logout_time_str = " ".join(line.split()[9:14])
 			login_time = datetime.strptime(login_time_str, "%a %b %d %H:%M:%S %Y")
@@ -122,9 +120,9 @@ def Lock(e = None):
 		screen_width = lock_window.winfo_screenwidth()
 		screen_height = lock_window.winfo_screenheight()
 		lockcanvas = tk.Canvas(lock_window, width=screen_width, height=screen_height, bg="black", highlightthickness=0)
-		if os.path.exists("/home/jauffret/Documents/42alternanceLockScreen/ft_lock_bkg.png"):
+		if os.path.exists(lock_bkg):
 			try:
-				bg_image = tk.PhotoImage(file="/home/jauffret/Documents/42alternanceLockScreen/ft_lock_bkg.png")
+				bg_image = tk.PhotoImage(file=lock_bkg)
 				bg_image = bg_image.subsample(bg_image.width() // screen_width, bg_image.height() // screen_height)
 				lock_window.bg_image = bg_image
 				lockcanvas.create_image(0, 0, anchor="nw", image=bg_image)
@@ -133,7 +131,7 @@ def Lock(e = None):
 				print("Error loading background image")
 		lockcanvas.pack(fill="both", expand=True)
 		lock_label = lockcanvas.create_text(screen_width - 20, screen_height - 20, text="", font=("Helvetica", 20), fill="white", anchor="se")
-		locked_by = lockcanvas.create_text(540, 100, text="Locked by jauffret : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
+		locked_by = lockcanvas.create_text(540, 100, text=f"Locked by {user} : a few seconds ago...\n Back sOOn..", font=("Helvetica", 14), fill="white", anchor="center", justify="center")
 		password_entry = tk.Entry(lockcanvas, show="o", font=("Helvetica", 14), insertbackground="white")
 		password_entry.configure(bg="#8FABFF", fg="#FFFFFF", width=30, bd=8, relief="flat", highlightthickness=0)
 		password_entry.pack(side="top", anchor="nw", padx=280, pady=150)
@@ -158,7 +156,6 @@ def check_password():
 	global lock_window, locked
 	entered_password = lock_window.password_entry.get()
 	auth = pam.pam()
-	user = os.getlogin()
 	if auth.authenticate(user, entered_password):
 		os.system("gsettings set org.gnome.mutter overlay-key 'Super_L'")
 		threading.Thread(target=restore_shortcuts).start()
@@ -248,9 +245,9 @@ def UpdateLabelTime():
 	if locked:
 		time_since_locked = current_time - locked_time
 		if time_since_locked.total_seconds() >= 60:
-			lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : {time_since_locked.seconds // 60} minutes ago...\n Back sOOn..")
+			lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by {user} : {time_since_locked.seconds // 60} minutes ago...\n Back sOOn..")
 			if time_since_locked.total_seconds() > 60 * 45:
-				lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by jauffret : a long time ago...\n Back sOOn..")
+				lock_window.canvas.itemconfigure(lock_window.locked_by, text=f"Locked by {user} : a long time ago...\n Back sOOn..")
 	if current_time.hour > 20:
 		root.canvas.itemconfigure(root.label, text=f"Time out it's 20h")
 		if locked:
@@ -293,6 +290,8 @@ def UpdateLabelTime():
 logSaveFile = "/home/jauffret/Documents/42alternanceLockScreen/saveLog.json"
 offset = 0
 screen_off_timeout = 15
+user = os.getlogin()
+lock_bkg = "/home/jauffret/Documents/42alternanceLockScreen/ft_lock_bkg.png"
 
 last_login_time = get_last_login_time()
 if last_login_time.hour < 8:
